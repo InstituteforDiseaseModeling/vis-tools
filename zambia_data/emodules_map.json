@@ -1,0 +1,9 @@
+{
+   "disease_plugins": [], 
+   "interventions": [], 
+   "reporter_plugins": [
+      "\\\\IDMPPFIL01\\IDM\\Home\\jgerardin\\bin\\malaria-ongoing_170209\\reporter_plugins\\libReportMalariaFiltered.dll", 
+      "\\\\IDMPPFIL01\\IDM\\Home\\jgerardin\\bin\\malaria-ongoing_170209\\reporter_plugins\\libreporteventcounter.dll", 
+      "\\\\IDMPPFIL01\\IDM\\Home\\jgerardin\\bin\\malaria-ongoing_170209\\reporter_plugins\\libhumanmigrationtracking.dll"
+   ]
+}

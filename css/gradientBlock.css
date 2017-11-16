@@ -1,0 +1,122 @@
+.gradientBlock {
+  margin-bottom: 16px;
+}
+.gradientBlock .title {
+}
+.gradientBlock .blockRow {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 8px;
+}
+.gradientBlock .gradientArea {
+  flex: 1;
+}
+.gradientBlock label {
+  margin-top: 2px;
+}
+.gradientBlock select {
+  background-color: rgba(38, 38, 38, 0.5);
+  color: white;
+  height: 24px;
+  margin-left: 4px;
+  margin-top: -2px;
+  border: 1px solid #888888;
+}
+.gradientBlock .gradient {
+  border: 1px solid #888888;
+  height: 24px;
+  width: 100%;
+}
+.gradientBlock .minValue {
+  float: left;
+}
+.gradientBlock .maxValue {
+  float: right;
+}
+.gradientBlock .menuButton,
+.gradientBlock .reverseButton
+{
+  background-color: rgba(38, 38, 38, 0.5);
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  border: 1px solid #888888;
+  cursor: pointer;
+}
+.gradientBlock .menuButton:hover,
+.gradientBlock .reverseButton:hover
+{
+  background-color: rgba(255, 255, 255, .3);
+}
+.gradientBlock .menuButton
+{
+  margin: 0 10px 0 3px;
+}
+.gradientBlock .reverseButton
+{
+  margin: 0 3px 0 0;
+}
+.gradientBlock .rangeSlider {
+  margin: 0 16px 10px 16px;
+}
+.gradientBlock .gradientMenuMask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: transparent;
+  z-index: 100;
+}
+.gradientBlock .gradientMenuMask ul {
+  list-style-type: none;
+  min-width: 175px;
+  height: auto;
+  background: black;
+  padding: 0;
+  margin: 0;
+  box-sizing: content-box;
+  white-space: nowrap;
+  cursor: default;
+}
+.gradientBlock .gradientMenuMask table {
+  position: absolute;
+  height: auto;
+  background: black;
+  margin: 0;
+  border: 1px solid #888888;
+  box-sizing: content-box;
+  cursor: default;
+  width: auto;
+  padding: 4px;
+}
+.gradientBlock .gradientMenuMask td {
+  vertical-align: top;
+  width: auto;
+  padding: 4px;
+}
+.gradientBlock .gradientMenuMask td .title {
+  border-bottom: 1px solid #888888;
+  margin-bottom: 8px;
+}
+.gradientBlock .gradientMenuMask li {
+  height: 25px;
+  font-size: small;
+  border-bottom: 1px solid black;
+}
+.gradientBlock .gradientMenuMask li.active {
+  background-color: #133c77;
+}
+.gradientBlock .gradientMenuMask li:hover {
+  background-color: #1e90ff;
+}
+.gradientBlock .gradientMenuMask li div {
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+  margin-right: 8px;
+}
+.gradientBlock .gradientMenuMask li span {
+  vertical-align: top;
+  line-height: 2em;
+}

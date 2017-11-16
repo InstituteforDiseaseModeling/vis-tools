@@ -1,0 +1,15 @@
+.labeledSlider {
+  margin: 8px 0 8px 0;
+  display: flex;
+  flex-direction: row;
+}
+.labeledSlider .title {
+}
+.labeledSlider .slider {
+  flex: 1;
+  margin: 0 20px 10px 20px;
+}
+.labeledSlider .value {
+  text-align: right;
+  min-width: 50px;
+}

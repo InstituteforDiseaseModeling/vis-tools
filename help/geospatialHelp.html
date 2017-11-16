@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Vis-Tools Geospatial Help</title>
+  <link rel="stylesheet" media="screen" href="geospatialHelp.css"/>
+</head>
+<body>
+  <h1>URL and visset</h1>
+  The data set that is shown in this window is controlled by the set=
+  parameter in the URL, which points to a <em>visset</em> file. For example,
+  the demo URL is:
+  <pre>    http://localhost:8000/geospatial.html?<span style='color: lime; font-weight: bold;'>set=zambia_data/output/visset_demo.json</span></pre>
+  In that URL, the set=zambia_data/output/visset_demo.json. For other data
+  sets, just modify the path to point to a different visset file within the
+  Vis-Tools directory.
+
+  <h1>Window parts</h1>
+  Below is an annotated picture of the Vis-Tools Geospatial Client window. Note
+  that many user interface elements also have helpful tooltips.
+  <div class="figure"><img src="vt-window-parts-mini.png"></div>
+
+  <h1>Manipulating the globe</h1>
+  The Vis-Tools Geospatial Client employs the powerful open-source
+  <a href="http://cesiumjs.org" target="_blank">Cesium</a> global mapping
+  system. These are the standard Cesium gestures you'll use to manipulate the
+  globe.
+  <div class="figure"><img src="vt-cesium-gestures.png"></div>
+
+  <h1>Top-row controls</h1>
+  <table>
+    <thead>
+      <tr><th class="buttonCol">Button</th><th class="descCol">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="buttonCol"><img src="vt-help-button.png"></td><td>
+        <em>Help.</em> This button opens the built-in help dialog box.</td></tr>
+      <tr><td class="buttonCol"><img src="vt-save-button.png"></td><td>
+        <em>Save.</em> This button saves the current visualization settings for
+        the Geospatial client to a file on your local computer.</td></tr>
+      <tr><td class="buttonCol"><img src="vt-load-button.png"></td><td>
+        <em>Load.</em> This button lets you re-load a set of visualization
+        settings you’ve previously saved with the Save button.</td></tr>
+      <tr><td class="buttonCol"><img src="vt-chart-button.png"></td><td>
+        <em>Aggregate inset charts.</em> This button, which is only present if
+        an inset chart file is specified in the preprocessing script, toggles
+        the visibility of the aggregate inset chart panel.</td></tr>
+      <tr><td class="buttonCol"><img src="vt-recenter-button.png"></td><td>
+        <em>Recenter.</em> This button causes the Geospatial client to recenter
+        the view onto the bounding box of your nodes, looking straight
+        down.</td></tr>
+      <tr><td class="buttonCol"><img src="vt-play-button.png"></td><td>
+        <em>Play.</em> This button causes the timeline to advance automatically,
+        playing an animation of the simulation’s data. How fast the playback
+        advances depends critically on the number of nodes, timesteps, and
+        layers being displayed.</td></tr>
+      <tr><td class="buttonCol"><img src="vt-pause-button.png"></td><td>
+        <em>Pause.</em> This button pauses playback of the simulation
+        animation.</td></tr>
+      <tr><td class="buttonCol"><img src="vt-basemap-button.png"></td><td>
+        <em>Base map.</em> This button, which is part of the underlying Cesium
+        mapping package, allows you to choose a base map layer from a list of
+        available base maps, some of which are satellite-based, and others
+        cartographic.</td></tr>
+    </tbody>
+  </table>
+  <br/>
+
+  <p>Also in the top row is the message area which shows errors and other
+    messages, as well as the current date and timestep within the simulation.
+    Use the <em>timeline</em> at the bottom of the screen to change the
+    simulation timestep.</p>
+
+  <h1>Timeline</h1>
+  <div class="figure"><img src="vt-timeline.png"></div>
+  <p>The timeline appears at the bottom of the window and shows the time range
+    of the simulation. The blue indicator shows the current time point, and the
+    date and timestep of that point are shown in the status area in the top
+    row.</p>
+
+  <p>To "scrub" the simulation, drag the blue current time point around the
+    timeline. You can also click the green current time indicator in any inset
+    chart to move the current time point to a location on the chart.</p>
+
+  <h1>Side panels</h1>
+  <img class="float-left" src="vt-panel-left.png">
+  <img class="float-right" src="vt-panel-right.png">
+  <p>The left side panel contains the controls for the visualization's layers.
+    Exactly what is shown here varies based on the visset, but all vissets will
+    at least have a Nodes layer and a Heatmap layer.</p>
+
+  <p>Within the Nodes and Heatmap layer controls are the <em>bindings</em>,
+    which map a simulation input or output to a visual parameter. For details on
+    bindings and the other controls in the left pane, see the full
+    documentation.</p>
+
+  <p>The right side panel shows per-node inset charts. To see per-node inset
+    charts, click on a node to select it. You can also search for a node by node
+    ID using the search box at the top of the right panel.</p>
+
+  <p>Both panels can be collapsed/expanded with the button in their upper
+    corners.</p>
+
+  <h1>Aggregate inset panel</h1>
+  <img class="float-left" src="vt-inset-panel.png">
+  <p>The aggregate inset chart panel shows any one of the aggregate channels
+    from the simulation’s output. To change the channel, use the channel select
+    control at the top of the window. (Note that this panel will only be
+    available if the visset specifies an inset chart source.)</p>
+
+  <h1>Keyboard shortcuts</h1>
+  <table>
+    <thead>
+      <tr><th class="buttonCol">Key</th><th class="descCol">Description</th></tr>
+    </thead>
+    <tbody>
+      <tr><td class="keyCol">E</td>
+        <td>Toggle the right panel open/closed.</td></tr>
+      <tr><td class="keyCol">I</td>
+        <td>Toggle the aggregate inset chart panel (if present) open/closed.</td></tr>
+      <tr><td class="keyCol">L</td>
+        <td>Equivalent to clicking the Load settings button.</td></tr>
+      <tr><td class="keyCol">R</td>
+        <td>Recenter the map onto the nodes bounding box.</td></tr>
+      <tr><td class="keyCol">S</td>
+        <td>Equivalent to clicking the Save settings button.</td></tr>
+      <tr><td class="keyCol">W</td>
+        <td>Toggle the left panel open/closed.</td></tr>
+      <tr><td class="keyCol">1-9</td>
+        <td>Toggle the visibility of layers. “1” toggles Nodes, “2” toggles
+          Heatmap, and subsequent numbers toggle whatever animation layers are
+          present in the order they appear.</td></tr>
+      <tr><td class="keyCol">Space</td>
+        <td>Play/pause timeline animation.</td></tr>
+      <tr><td class="keyCol">Left arrow</td>
+        <td>Step backward in time (4 hours by default).</td></tr>
+      <tr><td class="keyCol">Shift-left</td>
+        <td>Step backward in time by one full timestep.</td></tr>
+      <tr><td class="keyCol">Right arrow</td>
+        <td>Step forward in time (by four hours by default).</td></tr>
+      <tr><td class="keyCol">Shift-right</td>
+        <td>Step forward in time by one full timestep.</td></tr>
+    </tbody>
+  </table>
+</body>
+</html>
