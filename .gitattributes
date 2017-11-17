@@ -1,0 +1,181 @@
+# based on https://github.com/Danimoth/gitattributes
+* text=auto
+
+#
+# Overriding this file
+#   - According to git documentation this can be achieved via two methods
+# 
+# The first method is to define a path for matching:
+#/.idea/* text eol=crlf
+#
+# The second method is to place a customized copy of .gitattributes in the directory in question.
+#
+
+# git config
+.gitattributes text
+.gitignore text
+.gitconfig text
+
+# Visual Studio
+*.sln text eol=crlf
+*.csproj text eol=crlf
+*.vbproj text eol=crlf
+*.fsproj text eol=crlf
+*.dbproj text eol=crlf
+*.vcxproj text eol=crlf
+*.vcxitems text eol=crlf
+*.props text eol=crlf
+*.filters text eol=crlf
+
+# source code
+*.sql text eol=crlf
+*.cs  text  eol=crlf
+*.php text eol=crlf
+*.css text eol=crlf
+*.sass text
+*.scss text
+*.less text
+*.styl text
+*.js text eol=crlf
+*.ts text eol=crlf
+*.coffee text eol=crlf
+*.json text eol=crlf
+*.htm text eol=crlf
+*.html text eol=crlf
+*.xml text eol=crlf
+*.ini text eol=crlf
+*.inc text eol=crlf
+*.pl text
+*.rb text eol=crlf
+*.scm text
+*.bat text eol=crlf
+*.md text
+*.adoc text
+*.textile text
+*.mustache text
+*.csv text eol=crlf
+*.tab text
+*.tsv text eol=crlf
+*.c text eol=crlf
+*.cc text eol=crlf
+*.cxx text eol=crlf
+*.cpp text eol=crlf
+*.c++ text eol=crlf
+*.hpp text eol=crlf
+*.h text eol=crlf
+*.h++ text eol=crlf
+*.hh text eol=crlf
+*.df text eol=crlf
+*.java text eol=crlf
+*.jsp text eol=crlf
+*.jspf text eol=crlf
+*.properties text eol=crlf
+*.sh text
+*.tld text
+*.txt text eol=crlf
+*.npmignore text
+*.bowerrc text
+*.m text
+*.mu text
+
+# Python
+# ============
+*.pxd text
+*.py text eol=crlf
+*.py3 text
+*.pyw text
+*.pyx text
+
+# templates
+*.ejs text
+*.hbt text
+*.jade text
+*.haml text
+*.hbs text
+*.tmpl text
+*.phtml text eol=crlf
+*.latte text
+
+# binaries 
+*.slo binary
+*.lo binary
+*.o binary
+*.obj binary
+*.gch binary
+*.pch binary
+*.so binary
+*.dylib binary
+*.dll binary
+*.lai binary
+*.la binary
+*.a binary
+*.lib binary
+*.exe binary
+*.out binary
+*.app binary
+*.class binary
+*.ear binary
+*.jar binary
+*.war binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.tif binary
+*.tiff binary
+*.ico binary
+*.svg binary
+*.eps binary
+*.mov binary
+*.mp4 binary
+*.mp3 binary
+*.flv binary
+*.fla binary
+*.swf binary
+*.gz binary
+*.zip binary
+*.7z binary
+*.ttf binary
+*.eot binary
+*.woff binary
+*.woff2 binary
+*.pyc binary
+*.mex* binary
+*.fig binary
+*.mat binary
+*.mdl binary
+*.slx binary
+*.mdlp binary
+*.slxp binary
+*.sldd binary
+*.mltbx binary
+*.mlappinstall binary
+*.mlpkginstall binary
+*.mn binary
+*.db binary
+*.p binary
+*.pkl binary
+*.pyd binary
+*.pyo binary
+
+# Documents
+*.doc binary
+*.DOC binary
+*.docx binary
+*.DOCX binary
+*.dot binary
+*.DOT binary
+*.pdf binary
+*.PDF binary
+*.rtf binary
+*.RTF binary
+
+# R Source files
+*.Rdata text
+*.rdb binary
+*.rds binary
+*.Rd text
+*.Rdx binary
+*.Rmd text
+*.R text
+
