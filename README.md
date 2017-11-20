@@ -17,7 +17,7 @@ The Vis-Tools 1.0 release is the initial release.
 IMPORTANT
 ---------
 
-Make sure you at last install the two required Python packages before you try
+Make sure you at least install the two required Python packages before you try
 running Vis-Tools python web server:
 
     pip install czml future
