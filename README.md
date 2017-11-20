@@ -14,6 +14,18 @@ V1.0
 
 The Vis-Tools 1.0 release is the initial release.
 
+IMPORTANT
+---------
+
+Make sure you at last install the two required Python packages before you try
+running Vis-Tools python web server:
+
+    pip install czml future
+
+For full details, read the [Prerequisites](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/prereqs.html)
+page and [Quick start](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/intro.html)
+pages.
+
 Last minute additions
 ---------------------
 
