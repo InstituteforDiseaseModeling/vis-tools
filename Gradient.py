@@ -20,9 +20,9 @@ Usage::
     color = gradient.sample(0.5)
 
 """
-from __future__ import division
 
 # imports
+from __future__ import division
 from builtins import str
 from builtins import object
 from math import floor
@@ -135,9 +135,9 @@ class Color(object):
             between colors a and b.
 
         """
-        _r = a.r + (b.r - a.r) * factor0to1
-        _g = a.g + (b.g - a.g) * factor0to1
-        _b = a.b + (b.b - a.b) * factor0to1
+        _r = int(a.r + (b.r - a.r) * factor0to1)
+        _g = int(a.g + (b.g - a.g) * factor0to1)
+        _b = int(a.b + (b.b - a.b) * factor0to1)
         return Color(_r, _g, _b)
 
 
@@ -567,6 +567,8 @@ class Gradient(object):
             else:
                 color = Color(0, 0, 0)
             location = float(subparts[1])
+            if location < 0.0 or location > 1.0:
+                raise ValueError("Location out of range.")
             stop = {"color": color, "location": location}
             stops.append(stop)
         return stops

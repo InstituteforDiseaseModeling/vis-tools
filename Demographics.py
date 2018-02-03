@@ -10,16 +10,15 @@ Usage::
     print demographics
 
 """
-from __future__ import print_function
 
 # imports
+from __future__ import print_function
 from builtins import range
 from past.builtins import basestring
 from builtins import object
 import json
 import sys
 import csv
-from itertools import groupby
 
 
 # ==============================================================================
@@ -145,7 +144,8 @@ class Demographics(object):
 
         """
         if self.Defaults == {}: return "(empty)"
-        else: return self.source_file + ": " + repr(len(self.Nodes)) + " nodes"
+        else: return self.source_file + ": %d node%s" %\
+            (len(self.Nodes), "" if len(self.Nodes) == 1 else "s")
 
     # --------------------------------------------------------------------------
     def __len__(self):
@@ -319,7 +319,7 @@ class Demographics(object):
         """
         count = 0
         try:
-            with open(alt_csv, "rb") as csv_file:
+            with open(alt_csv, "r") as csv_file:
                 reader = csv.DictReader(csv_file)
                 for row in reader:
                     node_id = int(row["NodeID"])
@@ -409,7 +409,7 @@ class Demographics(object):
                 na_value = node["NodeAttributes"][node_attribute_field]
                 if na_value in result:
                     # key already exist - just add to it
-                    result[na_value].add(node["NodeID"])
+                    result[na_value].append(node["NodeID"])
                 else:
                     result[na_value] = [node["NodeID"]]
         return result

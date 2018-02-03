@@ -28,9 +28,9 @@ Minimal usage::
     vis_set.write()
 
 """
-from __future__ import print_function
 
 # imports
+from __future__ import print_function
 from builtins import range
 from builtins import object
 import json
@@ -87,11 +87,13 @@ class VisSet(object):
     # Constants
     # --------------------------------------------------------------------------
     k_default_visset = "./defaultvisset.json"
+    k_alt_default_visset = "../defaultvisset.json"
     k_visset_file_name = "visset.json"
     k_infected_migrations_file_name = "InfectedMigrations.czml"
     k_vector_migrations_file_name = "VectorMigrations.czml"
     k_network_layer_file_name = "Network.czml"
     k_geospatial = "Geospatial"
+    k_errno_permission_denied = 13
 
     # For set_node_vis_type
     k_nodes_as_points = "Points"
@@ -110,7 +112,7 @@ class VisSet(object):
     k_default_marker_duration_days = 2
 
     # --------------------------------------------------------------------------
-    def __init__(self, name="Untitled"):
+    def __init__(self, name="Untitled", verbose=True):
         """Construct a VisSet.
 
         Args:
@@ -130,10 +132,18 @@ class VisSet(object):
         self._event_recorder = None
         self._extra_node_fields = set()
         self._excluded_nodes = set()
-        self._verbose = True
+        self._verbose = verbose
 
-        with open(VisSet.k_default_visset, "r") as default_file:
-            dflt = json.load(default_file)
+        if path.isfile(VisSet.k_default_visset):
+            with open(VisSet.k_default_visset, "r") as default_file:
+                dflt = json.load(default_file)
+        elif path.isfile(VisSet.k_alt_default_visset):
+            with open(VisSet.k_alt_default_visset, "r") as default_file:
+                dflt = json.load(default_file)
+        else:
+            print("VisSet requires defaultvisset.json to be in current or "
+                  "parent directory")
+            raise ValueError("defaultvisset.json not found.")
 
         # This tricky bit extends this with the fields from dflt. Since new-
         # style objects' namespace is implemented as a dictionary, we can put
@@ -144,6 +154,19 @@ class VisSet(object):
 
         # Now set our options based on the default targetClient
         self.options = self.defaultOptions[self.targetClient]
+
+    # --------------------------------------------------------------------------
+    def __str__(self):
+        """Generates a textual representation of a VisSet.
+
+        This method allows the VisSet object to report its name when it
+        is printed.
+
+        Returns:
+            str: String containing the visset name.
+
+        """
+        return "VisSet %s" % self.name
 
     # --------------------------------------------------------------------------
     # Accessors
@@ -159,8 +182,6 @@ class VisSet(object):
 
         """
         self._verbose = verbose
-        if self._verbose:
-            print("Verbose set to %r" % verbose)
 
     # --------------------------------------------------------------------------
     def get_output_directory(self):
@@ -231,6 +252,9 @@ class VisSet(object):
 
         """
         # Update options with defaults for this client
+        if client_name not in self.defaultOptions:
+            raise ValueError("Specified client %s is not recognized." %
+                             client_name)
         self.targetClient = client_name
         self.options = self.defaultOptions[self.targetClient]
         if self._verbose:
@@ -260,10 +284,15 @@ class VisSet(object):
             node_vis_type (str): "Points" or "Shapes". See constants section.
 
         """
-        assert self.targetClient == VisSet.k_geospatial
-        self.options["nodeVis"]["visType"] = node_vis_type
-        if self._verbose:
-            print("Node visualization type set to %s" % node_vis_type)
+        if self.targetClient != VisSet.k_geospatial:
+            raise ValueError("set_node_vis_type is only for the Geospatial "
+                             "client.")
+        if node_vis_type == "Points" or node_vis_type == "Shapes":
+            self.options["nodeVis"]["visType"] = node_vis_type
+            if self._verbose:
+                print("Node visualization type set to %s" % node_vis_type)
+        else:
+            raise ValueError("node_vis_type must be 'Points' or 'Shapes'.")
 
     # --------------------------------------------------------------------------
     def set_output_directory(self, output_directory):
@@ -964,8 +993,10 @@ class VisSet(object):
                     sink = opts[vis_section][key]["sinks"][sink_name]
                     break
         if sink is None:
-            print("Sink %s not found in %s." % (sink_name, vis_section))
-            return False
+            if self._verbose:
+                print("Sink %s not found in %s." % (sink_name, vis_section))
+            raise KeyError("Sink %s not found in %s." %
+                           (sink_name, vis_section))
         else:
             sink["source"] = source_name
             sink["function"] = func
@@ -982,7 +1013,7 @@ class VisSet(object):
     def add_weighted_network_layer(self, network, gradient_spec,
                                    layer_name="Network",
                                    layer_file_name="Network",
-                                   opacity_func=opacity_one):
+                                   opacity_func=None):
         """Adds a weighted network visualization layer to the output visset.
 
         This method generates a CZML layer that provides a visual representation
@@ -1025,6 +1056,9 @@ class VisSet(object):
                 "sure you've called set_demographics before add_network_layer.")
             raise ValueError("Demographics required for network layer")
 
+        if opacity_func is None:
+            opacity_func = VisSet.opacity_one
+
         # Generate the layer
         try:
             czml_file = CZMLWriter()
@@ -1059,10 +1093,10 @@ class VisSet(object):
         opts = self.__dict__["options"]
         if vis_section in opts:
             opts[vis_section]["show"] = True
+            if self._verbose:
+                print("Set %s to shown" % vis_section)
         else:
-            print("Visualization section %s not found." % vis_section)
-        if self._verbose:
-            print("Set %s to shown" % vis_section)
+            raise KeyError("Visualization section %s not found." % vis_section)
 
     # --------------------------------------------------------------------------
     def hide_layer(self, vis_section):
@@ -1087,10 +1121,10 @@ class VisSet(object):
         opts = self.__dict__["options"]
         if vis_section in opts:
             opts[vis_section]["show"] = False
+            if self._verbose:
+                print("Set %s to hidden" % vis_section)
         else:
-            print("Visualization section %s not found." % vis_section)
-        if self._verbose:
-            print("Set %s to hidden" % vis_section)
+            raise KeyError("Visualization section %s not found." % vis_section)
 
     # --------------------------------------------------------------------------
     def exclude_spatial_channels(self, spatial_channel_names):
@@ -1286,13 +1320,21 @@ class VisSet(object):
             if node["nodeId"] in self._excluded_nodes:
                 continue
             for extra_field in self._extra_node_fields:
-                val = node[extra_field]
-                ranges[extra_field]["min"] =\
-                    val if val < ranges[extra_field]["min"] \
-                    else ranges[extra_field]["min"]
-                ranges[extra_field]["max"] =\
-                    val if val > ranges[extra_field]["max"]\
-                    else ranges[extra_field]["max"]
+                failed = False
+                try:
+                    val = float(node[extra_field])
+                    ranges[extra_field]["min"] =\
+                        val if val < ranges[extra_field]["min"] \
+                        else ranges[extra_field]["min"]
+                    ranges[extra_field]["max"] =\
+                        val if val > ranges[extra_field]["max"]\
+                        else ranges[extra_field]["max"]
+                except(BaseException):
+                    failed = True
+                if failed:
+                    ranges[extra_field]["min"] = 0
+                    ranges[extra_field]["max"] = 0
+                    break   # skip this field
         self.nodeInfo["ranges"].update(ranges)
 
     # --------------------------------------------------------------------------
@@ -1374,11 +1416,29 @@ class VisSet(object):
         if self._output_dir is None:
             print("Output directory must be set before write is called.")
             raise ValueError("No output directory at write call")
+        output_object = self._create_output_object()
         try:
             fp = path.join(self._output_dir, file_name)
-            output_object = self._create_output_object()
             with open(fp, "w") as json_file:
                 json.dump(output_object, json_file, indent=2)
+        except IOError as ex:
+            if ex.errno == VisSet.k_errno_permission_denied:
+                print("Permissions exception writing to '%s', attempting "
+                      "write to . instead." % self._output_dir)
+                file_name = "%s_%s" %\
+                    (path.basename(sys.argv[0]).split(".")[0], file_name)
+                if file_name.startswith("preprocess_"):
+                    file_name = file_name.replace("preprocess_", "", 1)
+                fp = path.join(".", file_name)
+                try:
+                    with open(fp, "w") as json_file:
+                        json.dump(output_object, json_file, indent=2)
+                except BaseException:
+                    print("Exception writing %s" % fp)
+                    raise
+            else:
+                # Other IOError
+                print("IOError errno = %d writing '%s'" % (ex.errno, fp))
         except BaseException:
             print("Exception writing %s" % file_name)
             raise

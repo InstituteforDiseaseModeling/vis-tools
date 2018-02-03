@@ -3,7 +3,7 @@
 :: Test for ability to run python
 where /q python
 if ERRORLEVEL 1 (
-    echo Python is not in your PATH environment variable. Please re-run the Python 2.x
+    echo Python is not in your PATH environment variable. Please re-run the Python
 	echo installer and make sure 'Add python.exe to Path' is enabled in the 'Customize
 	echo Python' page of the installer.
 	pause

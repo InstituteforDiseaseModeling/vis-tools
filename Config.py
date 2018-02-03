@@ -11,9 +11,9 @@ Usage::
     print config
 
 """
-from __future__ import print_function
 
 # imports
+from __future__ import print_function
 from builtins import object
 import json
 

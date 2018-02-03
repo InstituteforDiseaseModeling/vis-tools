@@ -12,9 +12,9 @@ Usage::
     print reports
 
 """
-from __future__ import print_function
 
 # imports
+from __future__ import print_function
 from future import standard_library
 standard_library.install_aliases()
 from builtins import range
@@ -23,7 +23,7 @@ from glob import glob
 from os import path
 from io import StringIO
 import json
-
+import sys
 
 # ==============================================================================
 # SpatialReports - a collection class representing set of spatial reports
@@ -194,9 +194,7 @@ class SpatialReports(object):
             None.
 
         """
-        io = StringIO()
-        json.dump(self.emit_object(), io)
-        return io.getvalue()
+        return json.dumps(self.emit_object())
 
     # --------------------------------------------------------------------------
     def remove(self, friendly_name):
@@ -222,11 +220,15 @@ class SpatialReports(object):
     # --------------------------------------------------------------------------
     def _discover_spatial_reports(self):
         try:
+            if not path.isdir(self.source_dir):
+                raise IOError("Directory %s is missing or inaccessible." %
+                              self.source_dir)
             self.paths = glob(path.join(self.source_dir,
                               self.k_spatial_filename_prefix + "*.bin"))
             for i in range(0, len(self.paths)):
                 self.paths[i] = self.paths[i].replace("\\", "/")
         except BaseException:
+            # print(sys.exc_info()[0])
             if self._verbose:
                 print("SpatialReports._discover_spatial_reports: Exception "\
                         "discovering spatial binaries")

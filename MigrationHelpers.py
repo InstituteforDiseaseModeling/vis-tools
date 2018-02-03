@@ -13,13 +13,15 @@ While there is currently only one method in this class, as other forms of
 migration culling are developed more methods will be added here as needed.
 
 """
+
+# imports
 from __future__ import print_function
+from builtins import object
 
 
 # ==============================================================================
 # MigrationHelpers - helper functions for human migration
 # ==============================================================================
-from builtins import object
 class MigrationHelpers(object):
     """Helper functions for processing migrations."""
 

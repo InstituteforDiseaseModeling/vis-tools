@@ -24,10 +24,9 @@ SpatialBinaryHeader is a class that allows access to the dimensions of a
 spatial report without actually reading the entire file.
 
 """
-from __future__ import division
-from __future__ import print_function
 
 # imports
+from __future__ import print_function
 from builtins import range
 from builtins import object
 import struct
@@ -35,6 +34,8 @@ import os
 import array
 import copy
 import sys
+
+k_python3 = sys.version_info.major == 3
 
 
 # ==============================================================================
@@ -230,22 +231,28 @@ class SpatialBinary(object):
         try:
             with open(bin_file_path, "wb") as bin_file:
                 # Write out the two counts
-                bin_file.write(struct.pack("<i4", len(node_ids)))
-                bin_file.write(struct.pack("<i4", len(self.timesteps)))
+                bin_file.write(struct.pack("<i", len(node_ids)))
+                bin_file.write(struct.pack("<i", len(self.timesteps)))
 
                 # Write out the node IDs
-                node_ids.write(bin_file)
+                if k_python3:
+                    node_ids.tofile(bin_file)
+                else:
+                    node_ids.write(bin_file)
 
                 # Write out the values for each timestep
                 for values_dict in self.timesteps:
                     values = array.array("f")
                     for node_id in node_ids_array:
                         values.append(values_dict[node_id])
-                    values.write(bin_file)
+                    if k_python3:
+                        values.tofile(bin_file)
+                    else:
+                        values.write(bin_file)
         except BaseException:
             if self._verbose:
-                print("SpatialBinary.write_binary: Exception writing spatial "\
-                    "binary %s" % bin_file_path)
+                print("SpatialBinary.write_binary: Exception writing spatial "
+                      "binary %s" % bin_file_path)
             raise
         self.source_file = bin_file_path
 
@@ -261,6 +268,23 @@ class SpatialBinary(object):
 
         """
         return copy.deepcopy(self)
+
+    # --------------------------------------------------------------------------
+    def print(self):
+        """Prints the entire contents of the spatial binary. Can be lengthy.
+
+        Returns:
+            None.
+
+        Args:
+            None.
+
+        """
+        for timestep in range(0, len(self.timesteps)):
+            ts_rec = self.timesteps[timestep]
+            for node_id in ts_rec:
+                print("Timestep %08d, node %08d, value = %f" %
+                      (timestep, node_id, ts_rec[node_id]))
 
     # --------------------------------------------------------------------------
     # Where combine_func is float combineFunc(float src1, float src2)
@@ -312,7 +336,7 @@ class SpatialBinary(object):
                     return value1 + value2      # for example
 
         Raises:
-            ValueError: if SpatialBinary objects don't have same dimensions or
+            ValueError: if SpatialBinary ofbjects don't have same dimensions or
             nodes
 
         """
@@ -350,11 +374,10 @@ class SpatialBinary(object):
                     sb1.value_max =\
                         new_value if new_value > sb1.value_max else sb1.value_max
                     ts1[nodeId] = new_value
-        except BaseException:   # Like bare except: but legal under PEP8
-            print("Exception during combine process.")
-            raise   # re-raise exception
-        finally:
-            return sb1
+        except(BaseException):
+            # print(sys.exc_info()[0])
+            raise
+        return sb1
 
     # --------------------------------------------------------------------------
     # Simple arithmetic combiner functions
@@ -434,13 +457,16 @@ class SpatialBinary(object):
 
                 # read counts
                 counts = bin_file.read(8)
-                self.node_count, = struct.unpack("<i4", counts[0:4])
-                timestep_count, = struct.unpack("<i4", counts[4:8])
+                self.node_count, = struct.unpack("<i", counts[0:4])
+                timestep_count, = struct.unpack("<i", counts[4:8])
 
                 # read node IDs
                 node_ids_data = bin_file.read(self.node_count * 4)
                 node_ids = array.array("i")
-                node_ids.fromstring(node_ids_data)
+                if k_python3:
+                    node_ids.frombytes(node_ids_data)
+                else:
+                    node_ids.fromstring(node_ids_data)
 
                 # read timestep data
                 self.timesteps = []
@@ -448,7 +474,10 @@ class SpatialBinary(object):
                     entries = {}
                     values = array.array("f")
                     values_data = bin_file.read(self.node_count * 4)
-                    values.fromstring(values_data)
+                    if k_python3:
+                        values.frombytes(values_data)
+                    else:
+                        values.fromstring(values_data)
                     for i in range(self.node_count):
                         value = values[i]
                         # Note: set value_min/value_max BEFORE zero check.
@@ -456,13 +485,14 @@ class SpatialBinary(object):
                         if node_id not in self._excluded_node_ids:
                             if value < self.value_min: self.value_min = value
                             if value > self.value_max: self.value_max = value
-                        if self.drop_zeros and value == 0.0: continue
+                        if self.drop_zeros and value == 0.0:
+                            continue
                         entries[node_ids[i]] = values[i]
                     self.timesteps.append(entries)
         except BaseException:
             if self._verbose:
-                print("SpatialBinary._read_binary: Exception reading spatial "\
-                        "binary %s" % bin_file_path)
+                print("SpatialBinary._read_binary: Exception reading spatial "
+                      "binary %s" % bin_file_path)
             raise
 
 
@@ -493,17 +523,18 @@ class SpatialBinaryHeader(object):
         self.timestep_count = 0
         self._verbose = verbose
 
-        try:
-            with open(file_path, "rb") as bin_file:
-                self.source_file = file_path
-                counts = bin_file.read(8)
-                self.node_count, = struct.unpack("<i4", counts[0:4])
-                self.timestep_count, = struct.unpack("<i4", counts[4:8])
-        except BaseException:
-            if self._verbose:
-                print("SpatialBinaryHeader.__init__: Exception reading "\
-                        "spatial binary %s" % file_path)
-            raise
+        if file_path != "":
+            try:
+                with open(file_path, "rb") as bin_file:
+                    self.source_file = file_path
+                    counts = bin_file.read(8)
+                    self.node_count, = struct.unpack("<i", counts[0:4])
+                    self.timestep_count, = struct.unpack("<i", counts[4:8])
+            except BaseException:
+                if self._verbose:
+                    print("SpatialBinaryHeader.__init__: Exception reading "
+                          "spatial binary %s" % file_path)
+                raise
 
     def __str__(self):
         """Generates a textual representation of a SpatialBinaryHeader.
@@ -516,5 +547,5 @@ class SpatialBinaryHeader(object):
             of timesteps.
 
         """
-        print("Spatial binary %s: %d nodes and %d timesteps" %\
-            (self.source_file, self.node_count, self.timestep_count))
+        return "Spatial binary %s: %d nodes and %d timesteps" %\
+               (self.source_file, self.node_count, self.timestep_count)

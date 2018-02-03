@@ -18,12 +18,13 @@ Usage::
     writer.write(path.join(my_dir, "New_Infections.czml"))
 
 """
-from __future__ import division
-from __future__ import print_function
 
 # imports
+from __future__ import print_function
 from builtins import object
 from czml import czml
+import functools
+import sys
 from datetime import date, timedelta
 from Gradient import Gradient, Color, NamedColors
 
@@ -70,7 +71,8 @@ class CZMLWriter(object):
             str: String containing number of packets.
 
         """
-        return "CZML: %d packets" % len(self.doc.packets)
+        return "CZML: %d packet%s" % (len(self.doc.packets),
+                                      "s" if len(self.doc.packets) != 1 else "")
 
     # --------------------------------------------------------------------------
     def set_sim_dates(self, sim_start_date, total_timestep_count):
@@ -453,9 +455,22 @@ class CZMLWriter(object):
             arrow_thickness_pixels (float): Thickness in pixels of comet tail.
 
         """
-        czml.Material._properties=\
+        czml.Material._properties = \
             ('grid', 'image', 'stripe', 'solidColor', 'polylineGlow',
              'polylineOutline', 'polylineArrow')
+
+        # This is a little ugly - I run-time extend Material with a
+        # PolylineArrow property, since the one in module czml lacks that.
+        class PolylineArrow(czml._CZMLBaseObject):
+            """Colors the line with a color and an arrow."""
+            _color = None
+            _properties = ('color',)
+
+        czml.Material._polylineArrow = None
+        czml.Material.polylineArrow = czml.class_property(
+            PolylineArrow, 'polylineArrow',
+            doc="""Colors the line with a color and an arrow.""")
+
         count = 0
         for row in vector_migrations:
             timestep = int(row["Time"])
@@ -627,7 +642,12 @@ class CZMLWriter(object):
             elif diff == 0: return 0
             else: return 1
 
-        network = sorted(network, cmp=sort_func)
+        if sys.version_info.major == 3:
+            # python 3: use a key function
+            network = sorted(network, key=functools.cmp_to_key(sort_func))
+        else:
+            # python 2: use a cmp function
+            network = sorted(network, cmp=sort_func)
 
         gradient = Gradient(gradient_spec)
         count = 0

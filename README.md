@@ -9,10 +9,6 @@ software.
 For complete information on the installation and use of Vis-Tools, see the
 [documentation](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/index).
 
-V1.0
-----
-
-The Vis-Tools 1.0 release is the initial release.
 
 IMPORTANT
 ---------
@@ -26,23 +22,38 @@ For full details, read the [Prerequisites](https://institutefordiseasemodeling.g
 page and [Quick start](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/intro.html)
 pages.
 
-Last minute additions
----------------------
+
+V1.1
+----
+
+The Vis-Tools 1.1 release brings Python 2.7.x and Python 3.6.x compatibility.
+Additionally there is a new Python unit test suite (not included in the
+distribution) that tests the full Python object API.
+
+
+Previous versions
+=================
+
+
+V1.0
+----
+
+The Vis-Tools 1.0 release is the initial release.
+
+
+### Last minute additions
 
 There were some last minute additions to Vis-Tools that are only minimally
 documented. They are noted here to aid in their discoverablility.
 
-### Weighted network visualization layers
-The VisSet Python object can now generate weighted network visualization layers
-given a CSV file containing the node-to-node connections and weights. See the
-VisSet class documentation for details.
+* Weighted network visualization layers:  The VisSet Python object can now
+generate weighted network visualization layers given a CSV file containing the
+node-to-node connections and weights. See the VisSet class documentation for
+details.
 
-### Vector cohort migration layers
-The VisSet Python object can now generate vector cohort migration layers given
-a suitable CSV file. See the VisSet class documentation for details.
+* Vector cohort migration layers: The VisSet Python object can now generate
+vector cohort migration layers given a suitable CSV file. See the VisSet class
+documentation for details.
 
-### Note on Python 3
-While the Vis-Tools 1.0 requires the *future* Python package it has only been
-tested on Python 2.7.x. Full Python 2 + 3 compatibility is planned for a
-subsequent release.
-
+* Note on Python 3: Vis-Tools 1.0 only works with Python 2.7.x. Use Vis-Tools
+1.1 or later for compatibility with both Python 2 and Python 3.
