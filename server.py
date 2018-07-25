@@ -13,7 +13,7 @@ k_command = [
     "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
     "--js-flags='--max_old_space_size=8192'",
     "--max_old_space_size=8192",
-    "http://localhost:%d/geospatial.html?set=zambia_data/output/visset_demo.json" % k_port
+    "http://localhost:%d/vistools/geospatial.html?set=/zambia_data/Vis-Tools/shapes_demo/visset.json" % k_port
 ]
 
 # Fire up an HTTP server serving up the current directory

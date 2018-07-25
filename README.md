@@ -13,14 +13,123 @@ For complete information on the installation and use of Vis-Tools, see the
 IMPORTANT
 ---------
 
-Make sure you at least install the two required Python packages before you try
-running Vis-Tools python web server:
-
-    pip install czml future
+Make sure you run the package install script before you try running Vis-Tools
+python web server:
+    
+    cd <vis-tools-directory>
+    python setup.py install
+    
 
 For full details, read the [Prerequisites](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/prereqs.html)
 page and [Quick start](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/intro.html)
 pages.
+
+V1.2
+----
+
+The Vis-Tools 1.2 release brings integration with IDM's COMPS environment.
+Additionally, Vis-Tools is now a proper Python package ('vis_tools'), and does a
+better job of encapsulation of the work products of its preprocessing phase.
+
+### Breaking changes
+
+If you have created custom preprocessing scripts with an earlier version of
+Vis-Tools, you'll need to update them a little to make them work with Vis-Tools
+1.2. The easiest way to do this is to generate a new default preprocessing
+script with survey:
+
+    cd my_sim
+    survey
+    
+
+Then use a diff tool such as WinDiff to merge your changes back into the default
+preprocessing script.    
+
+
+### Python package
+
+Vis-Tools is now a proper Python package. After pulling the Vis-Tools repo:
+
+    git clone <Vis-Tools-repo>
+    cd Vis-Tools
+    python setup.py install
+    
+
+Be sure to also do this step any time you update Vis-Tools (with a git pull).
+
+
+### Command line
+
+Both survey and survey's generated preprocessing scripts are now meant to be run
+from within a local simulation directory. For example:
+
+    cd my_sim
+    survey
+    python ./Vis-Tools/<md5>/preprocess_my_sim.py
+    
+
+### Products directories
+
+Vis-Tools survey tool and its generated preprocessing script now live within a
+Vis-Tools directory inside the simulation directory. When the preprocessing
+script is generated, it is place into a directory under Vis-Tools that is named
+after the script's MD5 hash. This allows multiple runs of survey, or multiple
+user's Vis-Tools products to be separated from one another. For example:
+
+    cd my_sim
+    survey
+    ls -la Vis-Tools
+      total 4
+      drwxr-xr-x 1 user 1049089 0 May 22 12:30 .
+      drwxr-xr-x 1 user 1049089 0 May 22 12:30 ..
+      drwxr-xr-x 1 user 1049089 0 May 22 12:30 46bbefdf5ec1171d00b9c342fff669bc
+    python ./Vis-Tools/46bbefdf5ec1171d00b9c342fff669bc/preprocess_my_sim.py
+
+
+### Output to stderr/stdout
+
+Vis-Tools python classes now properly output errors to stderr, and send
+non-error output to stdout.
+
+
+### COMPS integration
+
+Vis-Tools preprocessing and visualization can now be accomplished through the
+COMPS web UI. For simulations with spatial output, the Spatial tab of the
+Explore view. The survey program has new options to support COMPS integration
+but they can be largely ignored for local usage of Vis-Tools.
+
+
+### Geospatial client features
+
+* New "flat mode" flattens globe to an equi-rectangular projection. Toggle with
+the "F" key.
+
+* New "presentation mode" hides all user interface controls for recording
+videos or use in live presentations. Keys (such as space to start/stop the
+animation) still work. Toggle with the "P" key. Also now there are now "start"
+and "stop" audio tones that indicate when animation has started and stopped at
+the end, for use in recording animations.
+
+* The "Home" and "End" keys now seek the time locator to the beginning and end
+of the simulation's time span, respectively.
+
+* Gradients can now be used that have transparency built into their stops in the
+form "#rrggbbaa". For example, "#ff000088@0,#ffffffff@1" makes a red-to-white
+ramp which goes from half-translucent to fully opaque across its range. Such
+gradient specifications can be set in the visset via the preprocessing script.
+
+* The base layer (the map that is used for the globe) can now be a single
+custom-made equi-rectangular image. For example:
+
+
+    # Set custom base layer
+    vis_set.set_custom_base_layer("GrayWorld.png")
+    
+
+
+Previous versions
+=================
 
 
 V1.1
@@ -31,20 +140,12 @@ Additionally there is a new Python unit test suite (not included in the
 distribution) that tests the full Python object API.
 
 
-Previous versions
-=================
-
-
 V1.0
 ----
 
-The Vis-Tools 1.0 release is the initial release.
-
-
-### Last minute additions
-
-There were some last minute additions to Vis-Tools that are only minimally
-documented. They are noted here to aid in their discoverablility.
+The Vis-Tools 1.0 release is the initial release. There were some last minute
+additions to Vis-Tools that are only minimally documented. They are noted here
+to aid in their discoverablility.
 
 * Weighted network visualization layers:  The VisSet Python object can now
 generate weighted network visualization layers given a CSV file containing the

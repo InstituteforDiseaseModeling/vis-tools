@@ -1,0 +1,197 @@
+{
+  "name": "Untitled",
+  "timestepCount": 0,
+  "startDate": "1970-1-1",
+  "targetClient": "Geospatial",
+  "version": "1.2",
+  "defaultOptions": {
+    "Geospatial": {
+      "defaultAltitudeM": 1,
+      "defaultBaseLayer": "Bing Maps Aerial",
+      "clockStepDurationSecs": 14400,
+      "clockInitialTimestep": 0,
+      "clockAutoRun": false,
+      "clockAnimFrameSecs": 14400,
+      "clockArrowAdvance": 14400,
+      "clockShiftArrowAdvance": 86400,
+      "nodeVis": {
+        "visType": "Points",
+        "pointOptions": {
+          "sinks": {
+            "pointColor": {
+              "friendlyName": "Color",
+              "desc": "Node point fill color",
+              "returnDesc": "String containing color, e.g. '#101080' or 'red'",
+              "returnType": "string",
+              "returnConversion": "CesiumNodes.stringToCesiumColor",
+              "source": null,
+              "function": null,
+              "defaultFunction": "sampleGradient()"
+            },
+            "pointOpacity": {
+              "friendlyName": "Opacity",
+              "desc": "Node point opacity, [0, 1]",
+              "returnDesc": "Float",
+              "returnType": "number",
+              "returnConversion": null,
+              "source": null,
+              "function": null,
+              "defaultFunction": null
+            },
+            "pointOutlineColor": {
+              "friendlyName": "Outline color",
+              "desc": "Node point outline color",
+              "returnDesc": "String containing color, e.g. '#101080' or 'red'",
+              "returnType": "string",
+              "returnConversion": "CesiumNodes.stringToCesiumColor",
+              "source": null,
+              "function": null,
+              "defaultFunction": null
+            },
+            "pointOutlineThickness": {
+              "friendlyName": "Outline thickness",
+              "desc": "Node point outline thickness in pixels",
+              "returnDesc": "Float",
+              "returnType": "number",
+              "returnConversion": null,
+              "source": null,
+              "function": null,
+              "defaultFunction": null
+            },
+            "pointSize": {
+              "friendlyName": "Size",
+              "desc": "Node point size in pixels",
+              "returnDesc": "Float",
+              "returnType": "number",
+              "returnConversion": null,
+              "source": null,
+              "function": null,
+              "defaultFunction": null
+            }
+          },
+          "show": true,
+          "gradient": "YlOrRd",
+          "gradientRangeLow": 0,
+          "gradientRangeHigh": 1,
+          "scale": 1.0,
+          "defaultColor": "#ffff00",
+          "defaultOpacity": 1.0,
+          "defaultOutlineColor": "rgba(0,0,0,0)",
+          "defaultOutlineThicknessPx": 0,
+          "defaultSizePx": 6,
+          "selectionIndicatorColor": "#00ff00"
+        },
+        "shapeOptions": {
+          "sinks": {
+            "shapeColor": {
+              "friendlyName": "Color",
+              "desc": "Node shape fill color",
+              "returnDesc": "String containing color, e.g. '#101080' or 'red'",
+              "returnType": "string",
+              "returnConversion": "CesiumNodes.stringToCesiumColor",
+              "source": null,
+              "function": null,
+              "defaultFunction": "sampleGradient()"
+            },
+            "shapeOpacity": {
+              "friendlyName": "Opacity",
+              "desc": "Node shape opacity, [0, 1]",
+              "returnDesc": "Float",
+              "returnType": "number",
+              "returnConversion": null,
+              "source": null,
+              "function": null,
+              "defaultFunction": null
+            },
+            "shapeSize": {
+              "friendlyName": "Size",
+              "desc": "Node size in meters",
+              "returnDesc": "Float",
+              "returnType": "number",
+              "returnConversion": null,
+              "source": null,
+              "function": null,
+              "defaultFunction": null
+            },
+            "shapeExtrusion": {
+              "friendlyName": "Extrusion",
+              "desc": "Node extrusion from surface in meters",
+              "returnDesc": "Float",
+              "returnType": "number",
+              "returnConversion": null,
+              "source": null,
+              "function": null,
+              "defaultFunction": null
+            }
+          },
+          "show": true,
+          "gradient": "YlOrRd",
+          "gradientRangeLow": 0,
+          "gradientRangeHigh": 1,
+          "scale": 1.0,
+          "defaultColor": "#ffff00",
+          "defaultOpacity": 1.0,
+          "defaultShape": "Square",
+          "defaultSizeM": 100,
+          "defaultExtrusionM": 1,
+          "selectionIndicatorColor": "#00ff00"
+        }
+      },
+      "nodeInsets": {
+        "spatialChannels": "all",
+        "traceColor": "#ffff00",
+        "timeBarColor": "#00ff00"
+      },
+      "heatmapVis": {
+        "sinks": {
+          "source": {
+            "friendlyName": "Heatmap",
+            "desc": "Heatmap",
+            "returnDesc": "Float",
+            "returnType": "number",
+            "returnConversion": null,
+            "source": null,
+            "function": null
+          }
+        },
+        "show": true,
+        "gradient": "YlGnBu",
+        "gradientRangeLow": 0,
+        "gradientRangeHigh": 1,
+        "opacity": 1.0,
+        "sizePx": 1024
+      },
+      "markersVis": {},
+      "migrationsVis": {
+        "maxSimultaneousMigrations": 0
+      },
+      "insetCharts": {
+        "show": true,
+        "defaultChannelName": "Prevalence",
+        "traceColor": "#ffff00",
+        "timeBarColor": "#00ff00",
+        "location": "BC",
+        "width": "25%",
+        "height": "33%"
+      }
+    }
+  },
+  "options": {},
+  "links": {
+    "spatial": {},
+    "czml": {},
+    "inset": null,
+    "customBaseLayer": null
+  },
+  "nodes": [
+  ],
+  "nodeInfo": {
+    "longitudeDeltaMin": 0.00000900900900900901,
+    "latitudeDeltaMin": 0.00000900900900900901,
+    "longitudeMin": -17.528913,
+    "longitudeMax": 51.411762,
+    "latitudeMin": -34.832938,
+    "latitudeMax": 37.348327,
+    "ranges": {}
+  }
+}

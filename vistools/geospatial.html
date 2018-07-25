@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge">-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Geospatial</title>
+    <style type="text/css">
+      body, cesiumContainer { background-color: black; }
+    </style>
+    <!-- Debug set
+    <link rel="stylesheet" href="/vistools/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" media="screen" href="/vistools/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/lib/cesium/Build/CesiumUnminified/Widgets/widgets.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/lib/jquery-ui/jquery-ui.min.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/lib/jquery-ui/jquery-ui.theme.min.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/edgePanel.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/rollup.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/insetPanel.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/gradientBlock.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/labeledSlider.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/bindingBlock.css"/>
+    <link rel="stylesheet" href="/vistools/lib/nouislider/distribute/nouislider.min.css"/>
+    <link rel="stylesheet" href="/vistools/lib/highcharts/css/highcharts.css"/>
+    <link rel="stylesheet" href="/vistools/lib/perfect-scrollbar/css/perfect-scrollbar.min.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/geospatial.css"/>
+    <script src="/vistools/lib/jquery/dist/jquery.js"></script>
+    <script src="/vistools/lib/jquery-ui/jquery-ui.js" defer></script>
+    <script src="/vistools/lib/lodash/dist/lodash.js" defer></script>
+    <script src="/vistools/lib/async/dist/async.js" defer></script>
+    <script src="/vistools/lib/nouislider/distribute/nouislider.min.js" defer></script>
+    <script src="/vistools/lib/heatmap.js-amd/build/heatmap.js" defer></script>
+    <script src="/vistools/lib/cesium/Build/CesiumUnminified/Cesium.js" defer></script>
+    <script src="/vistools/lib/highcharts/js/highcharts.js" defer></script>
+    <script src="/vistools/lib/emitter/index.js" defer></script>
+    <script src="/vistools/lib/file-saver/FileSaver.min.js" defer></script>
+    <script src="/vistools/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.js" defer></script>
+    <script src="/vistools/js/utils.js"></script>
+    <script src="/vistools/js/persist.js" defer></script>
+    <script src="/vistools/js/gradient.js" defer></script>
+    <script src="/vistools/js/cesiumGradient.js" defer></script>
+    <script src="/vistools/js/heatmapGradient.js" defer></script>
+    <script src="/vistools/js/spatialBinary.js" defer></script>
+    <script src="/vistools/js/gradientBlock.js" defer></script>
+    <script src="/vistools/js/labeledSlider.js" defer></script>
+    <script src="/vistools/js/bindingBlock.js" defer></script>
+    <script src="/vistools/js/edgePanel.js" defer></script>
+    <script src="/vistools/js/rollup.js" defer></script>
+    <script src="/vistools/js/insetPanel.js" defer></script>
+    <script src="/vistools/js/binding.js" defer></script>
+    <script src="/vistools/js/visSet.js" defer></script>
+    <script src="/vistools/js/cesiumVisSet.js" defer></script>
+    <script src="/vistools/js/cesiumCzml.js" defer></script>
+    <script src="/vistools/js/cesiumNodes.js" defer></script>
+    <script src="/vistools/js/cesiumHeatmap.js" defer></script>
+    <script src="/vistools/js/perNodeInsets.js" defer></script>
+    <script src="/vistools/js/aggregateInsets.js" defer></script>
+    <script src="/vistools/js/geospatial.js" defer></script> -->
+    <!-- Release set -->
+    <link rel="stylesheet" href="/vistools/lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" media="screen" href="/vistools/lib/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/lib/cesium/Build/Cesium/Widgets/widgets.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/lib/jquery-ui/jquery-ui.min.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/lib/jquery-ui/jquery-ui.theme.min.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/edgePanel.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/rollup.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/insetPanel.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/gradientBlock.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/labeledSlider.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/bindingBlock.css"/>
+    <link rel="stylesheet" href="/vistools/lib/nouislider/distribute/nouislider.min.css"/>
+    <link rel="stylesheet" href="/vistools/lib/highcharts/css/highcharts.css"/>
+    <link rel="stylesheet" href="/vistools/lib/perfect-scrollbar/css/perfect-scrollbar.min.css"/>
+    <link rel="stylesheet" media="screen" href="/vistools/css/geospatial.css"/>
+    <script src="/vistools/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/vistools/lib/jquery-ui/jquery-ui.min.js" defer></script>
+    <script src="/vistools/lib/lodash/dist/lodash.min.js" defer></script>
+    <script src="/vistools/lib/async/dist/async.min.js" defer></script>
+    <script src="/vistools/lib/nouislider/distribute/nouislider.min.js" defer></script>
+    <script src="/vistools/lib/heatmap.js-amd/build/heatmap.min.js" defer></script>
+    <script src="/vistools/lib/cesium/Build/Cesium/Cesium.js" defer></script>
+    <script src="/vistools/lib/highcharts/js/highcharts.js" defer></script>
+    <script src="/vistools/lib/emitter/index.js" defer></script>
+    <script src="/vistools/lib/file-saver/FileSaver.min.js" defer></script>
+    <script src="/vistools/lib/perfect-scrollbar/js/perfect-scrollbar.jquery.min.js" defer></script>
+    <script src="/vistools/js/utils.js"></script>
+    <script src="/vistools/js/persist.js" defer></script>
+    <script src="/vistools/js/gradient.js" defer></script>
+    <script src="/vistools/js/cesiumGradient.js" defer></script>
+    <script src="/vistools/js/heatmapGradient.js" defer></script>
+    <script src="/vistools/js/spatialBinary.js" defer></script>
+    <script src="/vistools/js/gradientBlock.js" defer></script>
+    <script src="/vistools/js/labeledSlider.js" defer></script>
+    <script src="/vistools/js/bindingBlock.js" defer></script>
+    <script src="/vistools/js/edgePanel.js" defer></script>
+    <script src="/vistools/js/rollup.js" defer></script>
+    <script src="/vistools/js/insetPanel.js" defer></script>
+    <script src="/vistools/js/binding.js" defer></script>
+    <script src="/vistools/js/visSet.js" defer></script>
+    <script src="/vistools/js/cesiumVisSet.js" defer></script>
+    <script src="/vistools/js/cesiumCzml.js" defer></script>
+    <script src="/vistools/js/cesiumNodes.js" defer></script>
+    <script src="/vistools/js/cesiumHeatmap.js" defer></script>
+    <script src="/vistools/js/perNodeInsets.js" defer></script>
+    <script src="/vistools/js/aggregateInsets.js" defer></script>
+    <script src="/vistools/js/geospatial.js" defer></script>
+  </head>
+<body>
+  <div class="cesiumContainer"></div>
+  <div class="messageArea wait">
+    <button class="help" title="Help (?)"><i class="fa fa-question-circle"></i></button><button
+      class="comps" title="Locate this simulation in COMPS"><img src="/vistools/image/comps.png"></button><span
+      class="messageIcon"></span><span class="messageText">Loading...</span>
+  </div>
+  <div class="transportArea">
+    <span class="status"></span><span>&nbsp;&nbsp;</span>
+    <button class="save" title="Save settings to JSON (S)"><i class="fa fa-floppy-o"></i></button><button
+      class="load" title="Load settings from JSON (L)"><i class="fa fa-folder-open-o"></i></button><button
+      class="toggleInset" title="Show/hide aggregate inset charts (I)"><i class="fa fa-line-chart"></i></button><button
+      class="recenter" title="Re-center on data (R)"><i class="fa fa-crosshairs"></i></button><button
+      class="play" title="Play timeline (space)"><i class="fa fa-play"></i></button><button
+      class="pause" title="Pause timeline"><i class="fa fa-pause"></i></button><input
+      type="file" class="loadFile" accept=".json">
+  </div>
+  <div class="overlay">
+    <div class="leftPanel"></div>
+    <div class="rightPanel"></div>
+    <div class="insetArea"><div class="inset"></div></div>
+  </div>
+  <div class="credits"></div>
+  <div class="audio">
+    <audio class="animationStart" src="/vistools/audio/AnimationStart.mp3" preload="auto"></audio>
+    <audio class="animationStop" src="/vistools/audio/AnimationStop.mp3" preload="auto"></audio>
+  </div>
+</body>
+</html>

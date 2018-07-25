@@ -1,0 +1,398 @@
+/* ========================================================================== */
+/* Page */
+/* ========================================================================== */
+html {
+  font-family: Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+  height: 100%;
+  background-color: black;
+}
+body {
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  height: 100%;
+  background-color: black;
+}
+.cesiumContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+}
+.credits {
+  display: none;
+}
+.audio {
+  display: none;
+}
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
+.clearfix:after
+{
+  content: ".";
+  display: block;
+  height: 0;
+  width: 100%;
+  clear: both;
+  float: none;
+  visibility: hidden;
+}
+.canvas {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.error { color: red; }
+.info, .wait { color: white; }
+.warn { color: gold; }
+.nosel { user-select: none; }
+
+/* Browser fail */
+.browserFailBox {
+  display: table;
+  width: 100vw;
+  height: 100vh;
+}
+.browserFailMessage {
+  font-size: 24pt;
+  color: white;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+  background-color: maroon;
+}
+
+/* Bootstrap overrides */
+label {
+  font-weight: normal;
+}
+
+/* ========================================================================== */
+/* Transport overlay */
+/* ========================================================================== */
+.transportArea {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 40px;
+  padding: 7px 40px 10px 0;
+  text-align: right;
+  pointer-events: none;
+}
+.transportArea button,
+.messageArea button
+{                 /* Styled after Cesium button */
+  width: 32px;
+  height: 32px;
+  border-radius: 14%;
+  margin: 0 10px 0 0;
+  border: 1px solid #444444;
+  background: rgba(38, 38, 38, 0.5);
+  color: white;
+  pointer-events: auto;
+}
+.transportArea button:hover,
+.messageArea button:hover
+{ background-color: rgba(38, 38, 38, .3); }
+.transportArea button:focus,
+.messageArea button:focus
+{ outline: none; }
+.transportArea input[type="file"]
+{
+  display: none;
+}
+.transportArea .status {
+  text-align: right;
+  font-size: large;
+  font-weight: bold;
+  color: #cccccc;
+  pointer-events: none;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+/* ========================================================================== */
+/* Message area */
+/* ========================================================================== */
+.messageArea {
+  box-sizing: border-box;
+  position: absolute;
+  width: 50%;
+  height: 46px;
+  padding: 2px 6px 0 10px;
+  overflow: auto;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  font-size: 1em;
+}
+.messageArea button {
+  margin: 5px 10px 0 -1px;
+}
+.messageArea .comps img {
+  width: 16px;
+  height: 16px;
+}
+.messageText {
+  font-size: inherit;
+  font-weight: bold;
+  line-height: 0.8em;
+}
+.messageIcon {
+  display: inline-block;
+  margin-right: 10px;
+  font-family: "FontAwesome", sans-serif;
+  font-size: inherit;
+  line-height: 0.8em;
+}
+.messageArea .messageIcon:after { content: "" }
+.messageArea.info .messageIcon:after
+{
+  color: #cccccc;
+  content: "\f0e5"; /* fa-comment-o */
+}
+.messageArea.warn .messageIcon:after {
+  color: gold;
+  content: "\f071"; /* fa-warning */
+}
+.messageArea.error .messageIcon:after {
+  color: red;
+  content: "\f071"; /* fa-warning */
+}
+.messageArea.wait .messageIcon {
+  -webkit-animation: message-spin 2s infinite linear;
+  animation: message-spin 2s infinite linear;
+}
+.messageArea.wait .messageIcon:after {
+  color: #cccccc;
+  content: "\f110";  /* fa-spinner */
+}
+.messageArea.info .messageText,
+.messageArea.wait .messageText,
+.messageArea.error .messageText,
+.messageArea .messageText
+{
+  color: #cccccc;
+}
+.messageArea.warn .messageText { color: gold; }
+@-webkit-keyframes message-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes message-spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+.helpDialog {
+  padding: 1em 0 1em 1em !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  height: 100%;
+  min-height: 555px !important;
+  display: flex;
+  flex-direction: column;
+}
+.helpDialog iframe {
+  border: none;
+  width: 100%;
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.ui-button .ui-icon { color: white; }
+.ui-button .ui-icon:hover { color: black; }
+.ui-button:focus { outline: none; }
+
+/* ========================================================================== */
+/* Panels area */
+/* ========================================================================== */
+.overlay {
+  pointer-events: none;
+  position: relative;
+  box-sizing: border-box;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 5;
+}
+.overlay > .insetArea
+{
+  position: absolute;
+  pointer-events: none;
+  top: 46px;
+  right: 35px;
+  bottom: 35px;
+  left: 34px;
+  background: transparent;
+  overflow: hidden;
+}
+
+/* ========================================================================== */
+/* Stuff inside Rollup and InsetPanel controls */
+/* ========================================================================== */
+.rollup .contentArea select,
+.insetPanel .contentArea select
+{
+  background-color: rgba(38, 38, 38, 0.5);
+  color: white;
+  height: 24px;
+  border: 1px solid #888888;
+}
+.rollup .contentArea select:focus,
+.insetPanel .contentArea select:focus
+{
+  outline: none;
+}
+.rollup .contentArea select:hover,
+.insetPanel .contentArea select:hover
+{
+  background-color: rgba(38, 38, 38, 0.8);
+}
+.rollup .contentArea button:focus,
+.insetPanel .contentArea button:focus
+{
+  outline: none;
+}
+.rollup .titleText svg {
+  vertical-align: text-top;
+}
+
+/* Stuff inside InsetPanel controls */
+.insetPanel select {
+  background-color: rgba(38, 38, 38, 0.5);
+  color: white;
+  height: 24px;
+  border: 1px solid #888888;
+}
+
+/* CesiumNodes UI */
+.nodesUi .opacityBlock {
+  margin-top: 16px;
+}
+.nodesUi .labeledSlider .noUi-target {
+  background-color: rgba(38, 38, 38, 0.5);
+  box-shadow: none;
+}
+/* CesiumHeatmap UI */
+.heatmapUi .labeledSlider .title {
+  min-width: 55px;
+}
+.heatmapUi .labeledSlider .noUi-target {
+  background-color: rgba(38, 38, 38, 0.5);
+  box-shadow: none;
+}
+.heatmapUi > .title > .saveHeatmap {
+  position: absolute;
+  right: 32px;
+  top: 6px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  text-align: center;
+  font-size: smaller;
+  line-height: 1.8em;
+}
+.heatmapUi > .title > .saveHeatmap:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* PerNodeInsets UI */
+.nodeInfo {
+  display: table;
+  border-spacing: 8px 0;
+}
+.nodeInfo .nodeInfoRow { display: table-row; }
+.nodeInfo .nodeInfoLabel {
+  display: table-cell;
+  text-align: right;
+  white-space: nowrap;
+}
+.nodeInfo .nodeInfoValue {
+  display: table-cell;
+  width: 100%;
+}
+.perNodeInsetCharts .highcharts-title {
+  font-size: small;
+}
+.nodeIdSearchArea {
+  position: absolute;
+  width: auto;
+  height: auto;
+  right: 30px;
+  top: 4px;
+}
+.nodeIdSearchArea button {
+  border: none;
+  color: white;
+  pointer-events: auto;
+  background: transparent;
+}
+.nodeIdSearchArea input.nodeId {
+  background: rgba(38, 38, 38, 0.5);
+  color: white;
+  font-size: smaller;
+  width: 75px;
+  border: 1px solid #444444;
+}
+.nodeIdSearchArea input.nodeId:focus {
+  outline: none;
+}
+
+/* AggregateInsets UI */
+.inset .contentArea { padding-bottom: 10px; }
+.inset .contentArea select { width: 100%; }
+.inset .contentArea .chart { cursor: default; }
+
+/* ========================================================================== */
+/* Highcharts gray theme overrides */
+/* ========================================================================== */
+.highcharts-background {
+  display: none;
+}
+rect.timebar {
+  fill: lime;
+}
+.highcharts-axis-title, .highcharts-axis-labels, .highcharts-title {
+  fill: white;
+}
+.highcharts-grid, .highcharts-axis-line {
+  stroke: white;
+}
+.highcharts-color-0 {
+  stroke: yellow;
+}
+.highcharts-tracker {
+  display: none;
+}
+
+/* ========================================================================== */
+/* Cesium overrides */
+/* ========================================================================== */
+.cesium-button:hover {
+  border-color: #444444;
+  background-color: rgba(38, 38, 38, .3);
+  box-shadow: none;
+}
+.cesium-button:focus {
+  border-color: #444444;
+}

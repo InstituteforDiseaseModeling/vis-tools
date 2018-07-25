@@ -1,0 +1,64 @@
+.edgePanel {
+  pointer-events: auto;
+  position: absolute;
+  box-sizing: border-box;
+  width: 100px;
+  background-color: rgba(38, 38, 38, 0.5);
+  z-index: 5;
+}
+.edgePanelLeft {
+  left: 0;
+  border-radius: 0 10px 10px 0;
+  padding: 28px 10px 10px 10px;
+}
+.edgePanelRight {
+  right: 0;
+  border-radius: 10px 0 0 10px;
+  padding: 28px 10px 10px 10px;
+}
+.edgePanel > .sizeBar {
+  position: absolute;
+  height: 100%;
+  width: 8px;
+  top: 0;
+  cursor: ew-resize;
+}
+.edgePanel.closed > .sizeBar {
+  cursor: default;
+}
+.edgePanelLeft > .sizeBar { right: 0; }
+.edgePanelRight > .sizeBar { left: 0; }
+.edgePanel > .panelToggle {
+  position: absolute;
+  top: 0;
+  width: 24px;
+  height: 24px;
+  /*background-color: rgba(255, 255, 255, .2);*/
+  color: white;
+  text-align: center;
+  border-radius: 50%;
+  font-family: "FontAwesome", sans-serif;
+  font-size: 22px;
+  line-height: 24px;
+  cursor: pointer;
+}
+.edgePanel > .panelToggle:hover { background-color: rgba(255, 255, 255, .3); }
+.edgePanelLeft > .panelToggle { right: 0 }
+.edgePanelRight > .panelToggle { left: 0 }
+.edgePanelLeft.closed > .panelToggle:after,
+.edgePanelRight.open > .panelToggle:after
+{
+  content: "\f101"; /* fa-angle-double-right */
+}
+.edgePanelLeft.open > .panelToggle:after,
+.edgePanelRight.closed > .panelToggle:after
+{
+  content: "\f100"; /* fa-angle-double-left */
+}
+.edgePanel > .contentArea {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+}
