@@ -7,7 +7,7 @@ an adjunct to [EMOD](http://idmod.org/software), IDM's epidemiological modeling
 software.
 
 For complete information on the installation and use of Vis-Tools, see the
-[documentation](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/index).
+[documentation](http://idmod.org/docs/vis-tools/).
 
 
 IMPORTANT
