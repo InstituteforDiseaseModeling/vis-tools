@@ -28,10 +28,8 @@ VisSet.prototype.clockToTimestep = function(viewer, time)
 //------------------------------------------------------------------------------
 VisSet.prototype.julianDateToTimestep = function(viewer, julDate)
 {
-  var curXValue = Cesium.JulianDate.toDate(julDate).getTime();
-  var startMs = Cesium.JulianDate.toDate(viewer.clock.startTime).getTime();
-  var delta = curXValue - startMs;
-  var timestep = Math.floor(delta / 86400000);  // milliseconds in one day
+  var timestep = Math.floor(Cesium.JulianDate.secondsDifference(
+    julDate, viewer.clock.startTime) / Utils.kSecondsInDay);
   if (timestep < 0)
      timestep = 0;
   if (timestep >= this.timestepCount)

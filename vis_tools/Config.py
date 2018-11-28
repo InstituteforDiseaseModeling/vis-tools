@@ -178,6 +178,8 @@ class Config(object):
         # distribute the parts to our members
         if "parameters" in raw:
             self.parameters = raw["parameters"]
+            self.parameters["Simulation_Duration"] =\
+                int(self.parameters["Simulation_Duration"])
             self.timestep_count = self.parameters["Simulation_Duration"]
             if self._verbose:
                 print("Config._read_json: Config read, simulation duration %d "

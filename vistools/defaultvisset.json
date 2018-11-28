@@ -46,7 +46,7 @@
               "returnConversion": "CesiumNodes.stringToCesiumColor",
               "source": null,
               "function": null,
-              "defaultFunction": null
+              "defaultFunction": "sampleGradient()"
             },
             "pointOutlineThickness": {
               "friendlyName": "Outline thickness",

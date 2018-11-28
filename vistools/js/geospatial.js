@@ -459,14 +459,8 @@ Geospatial.prototype._onTick = function(clock, force)
   this._lastTickTime = Cesium.JulianDate.clone(clock.currentTime);
 
   // Back-calculate our timestep from the clock's JulianDate
-  var curXValue = Cesium.JulianDate.toDate(clock.currentTime).getTime();
-  var startMs = Cesium.JulianDate.toDate(this._viewer.clock.startTime).getTime();
-  var delta = curXValue - startMs;
-  var timestep = Math.floor(delta / 86400000);  // milliseconds in one day
-  if (timestep < 0)
-    timestep = 0;
-  if (timestep >= this._set.timestepCount)
-    timestep = this._set.timestepCount - 1;
+  var curDate = Cesium.JulianDate.toDate(clock.currentTime).getTime();
+  var timestep = this._getCurTimestep();
   if (this._presentation && timestep === this._set.timestepCount - 1)
   {
     setTimeout(function()
@@ -487,8 +481,8 @@ Geospatial.prototype._onTick = function(clock, force)
   this._nodesVis.update(timestep, force);
 
   // Update the per-node inset charts
-  this._perNodeInsetsVis.update(curXValue);
-  this._aggregateInsetsVis.update(curXValue);
+  this._perNodeInsetsVis.update(curDate);
+  this._aggregateInsetsVis.update(curDate);
 };
 
 //------------------------------------------------------------------------------
@@ -520,10 +514,10 @@ Geospatial.prototype._onNodeSelected = function(nodeIdOrUndef)
     // otherwise leave panel state alone
   }
 
-  // Re-broadcast this event with addition of curXValue for insets
-  var curXValue =
+  // Re-broadcast this event with addition of curDate for insets
+  var curDate =
     Cesium.JulianDate.toDate(this._viewer.clock.currentTime).getTime();
-  this.emit("nodeselected", nodeIdOrUndef, curXValue);
+  this.emit("nodeselected", nodeIdOrUndef, curDate);
 };
 
 //------------------------------------------------------------------------------
@@ -584,7 +578,8 @@ Geospatial.prototype._doVisualizerLoads = function(cb)
 Geospatial.prototype._checkBrowser = function()
 {
   // Chrome 1+
-  var isChrome = !!window.chrome && !!window.chrome.webstore;
+  var isChrome = (!!window.chrome && !!window.chrome.webstore) ||
+    navigator.userAgent.indexOf("HeadlessChrome/") >= 0;
 
   // Firefox 1.0+
   var isFirefox = typeof InstallTrigger !== 'undefined';
@@ -856,9 +851,7 @@ Geospatial.prototype._postLoadInitialize = function()
 
     // Set initial time and start the clock
     var clock = instance._viewer.clock;
-    Cesium.JulianDate.addSeconds(clock.startTime,
-      instance._set.options.clockInitialTimestep * Utils.kSecondsInDay,
-      clock.currentTime);
+    this._setCurTimestep(instance._set.options.clockInitialTimestep);
     clock.shouldAnimate = instance._set.options.clockAutoRun;
     if (!clock.shouldAnimate)
     {
@@ -866,6 +859,25 @@ Geospatial.prototype._postLoadInitialize = function()
     }
   });
 };
+
+//------------------------------------------------------------------------------
+Geospatial.prototype._getCurTimestep = function()
+{
+  return this._set.julianDateToTimestep(this._viewer,
+    this._viewer.clock.currentTime);
+};
+
+//------------------------------------------------------------------------------
+Geospatial.prototype._setCurTimestep = function(timestep)
+{
+  if (timestep < 0)
+    timestep = 0;
+  if (timestep >= this._set.timestepCount)
+    timestep = this._set.timestepCount - 1;
+  var clock = this._viewer.clock;
+  Cesium.JulianDate.addSeconds(clock.startTime,
+    timestep * Utils.kSecondsInDay, clock.currentTime);
+}
 
 //------------------------------------------------------------------------------
 Geospatial.prototype._bind = function()
@@ -975,10 +987,7 @@ Geospatial.prototype._setState = function(state)
     this._nodesVis.selectNode(state.selectedNodeId);
 
   // Current timestep
-  var clock = this._viewer.clock;
-  Cesium.JulianDate.addSeconds(clock.startTime,
-    state.timestep * Utils.kSecondsInDay,
-    clock.currentTime);
+  this._setCurTimestep(state.timestep);
 };
 
 //------------------------------------------------------------------------------

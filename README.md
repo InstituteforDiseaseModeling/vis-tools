@@ -24,6 +24,24 @@ For full details, read the [Prerequisites](https://institutefordiseasemodeling.g
 page and [Quick start](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/intro.html)
 pages.
 
+
+V1.3
+----
+
+The Vis-Tools 1.3 release is a minor bug-fixing update. If you're running
+Vis-Tools standalone, be sure to pull the latest version and do:
+
+    cd <vis-tools-directory>
+    python setup.py install
+
+
+This will ensure you're using the latest Python classes.
+
+
+Previous versions
+=================
+
+
 V1.2
 ----
 
@@ -126,11 +144,6 @@ custom-made equi-rectangular image. For example:
     # Set custom base layer
     vis_set.set_custom_base_layer("GrayWorld.png")
     
-
-
-Previous versions
-=================
-
 
 V1.1
 ----
