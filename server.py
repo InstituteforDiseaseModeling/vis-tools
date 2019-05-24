@@ -5,6 +5,7 @@ import http.server
 import socketserver
 import subprocess
 import socket
+import time
 import sys
 
 # Constants
@@ -18,6 +19,7 @@ k_command = [
 
 # Fire up an HTTP server serving up the current directory
 try:
+    http.server.SimpleHTTPRequestHandler.extensions_map[".js"] = "application/x-javascript"
     httpd = socketserver.TCPServer(("", k_port),
                                    http.server.SimpleHTTPRequestHandler)
 except socket.error:
@@ -32,6 +34,7 @@ else:
     print("Vis-Tools serving on port %d...\n" % k_port)
 
     # Fire up chrome with options that allow large memory usage
+    time.sleep(2)
     p = subprocess.Popen(k_command)
 
     # Start serving (yes, possible race condition here)

@@ -578,7 +578,7 @@ Geospatial.prototype._doVisualizerLoads = function(cb)
 Geospatial.prototype._checkBrowser = function()
 {
   // Chrome 1+
-  var isChrome = (!!window.chrome && !!window.chrome.webstore) ||
+  var isChrome = (!!window.chrome) ||
     navigator.userAgent.indexOf("HeadlessChrome/") >= 0;
 
   // Firefox 1.0+

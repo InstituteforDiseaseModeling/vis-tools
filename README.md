@@ -24,15 +24,14 @@ For full details, read the [Prerequisites](https://institutefordiseasemodeling.g
 page and [Quick start](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/intro.html)
 pages.
 
+V1.3.1
+------
 
-V1.3
-----
+Version 1.3.1 fixes some compatibility problems with Chrome versions 71+. If
+you're running Vis-Tools standalone, be sure to pull the latest version and do:
 
-The Vis-Tools 1.3 release is a minor bug-fixing update. If you're running
-Vis-Tools standalone, be sure to pull the latest version and do:
-
-    cd <vis-tools-directory>
-    python setup.py install
+  cd <vis-tools-directory>
+  python setup.py install
 
 
 This will ensure you're using the latest Python classes.
@@ -40,6 +39,12 @@ This will ensure you're using the latest Python classes.
 
 Previous versions
 =================
+
+
+V1.3
+----
+
+The Vis-Tools 1.3 release is a minor bug-fixing update.
 
 
 V1.2

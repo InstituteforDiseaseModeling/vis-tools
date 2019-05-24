@@ -17,7 +17,7 @@ long_description = "The Institute for Disease Modeling (IDM) develops complex "\
 #     requires.append('enum34>=1.1.6')
 
 setup(name='vis-tools',
-      version='1.3',
+      version='1.3.1',
       description='Python preprocessing classes for advanced visualization',
       long_description=long_description,
       url='https://github.com/InstituteforDiseaseModeling/vis-tools',
