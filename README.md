@@ -1,7 +1,7 @@
 Vis-Tools
 =========
 
-The [Institute for Disease Modeling](http://www.idmod.org>) (IDM)  has developed Vis-Tools to aid in the
+The [Institute for Disease Modeling](http://www.idmod.org/) (IDM)  has developed Vis-Tools to aid in the
 visualization of geospatial disease simulation data. It is meant to be used as
 an adjunct to [EMOD](http://idmod.org/software), IDM's epidemiological modeling
 software.
