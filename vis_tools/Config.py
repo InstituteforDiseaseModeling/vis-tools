@@ -13,7 +13,6 @@ Usage::
 """
 
 # imports
-from __future__ import print_function
 from builtins import object
 import json
 import sys
@@ -178,6 +177,11 @@ class Config(object):
         # distribute the parts to our members
         if "parameters" in raw:
             self.parameters = raw["parameters"]
+            # We deliberately cast the following value to an int because there
+            # were simulations in the wild with fractional timestep counts.
+            # e.g 3d9b55ef-537e-e811-80c9-f0921c167864 in staging with a 10.95
+            # duration, and the associated spatial binaries had 10 timesteps,
+            # indicating that DTK is truncating. So now we are too.
             self.parameters["Simulation_Duration"] =\
                 int(self.parameters["Simulation_Duration"])
             self.timestep_count = self.parameters["Simulation_Duration"]

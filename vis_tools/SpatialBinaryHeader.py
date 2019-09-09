@@ -14,12 +14,9 @@ spatial report without actually reading the entire file.
 """
 
 # imports
-from __future__ import print_function
 from builtins import object
 import struct
 import sys
-
-k_python3 = sys.version_info.major == 3
 
 
 # ==============================================================================

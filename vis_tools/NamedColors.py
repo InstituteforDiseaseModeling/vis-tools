@@ -17,7 +17,6 @@ Usage::
 """
 
 # imports
-from __future__ import division
 from builtins import object
 from math import floor
 from vis_tools import Color

@@ -7,9 +7,15 @@ function Geospatial()
 //  "panelschanged": emitted when edgePanel or insetPanels change size/loc/state
 //
 // Depends on:
-//  async
-//  lodash
-//  jQuery
+//  async: https://caolan.github.io/async/v3/
+//  lodash: https://lodash.com/docs
+//  jQuery: https://www.jquery.com
+//  Cesium: https://www.cesiumjs.org/refdoc/
+//  component-emitter: https://www.npmjs.com/package/component-emitter
+//  file-saver: https://www.npmjs.com/package/file-saver
+//  font-awesome: https://fontawesome.com/icons?d=gallery
+//  perfect-scrollbar: https://www.npmjs.com/package/perfect-scrollbar
+//  postette: https://www.npmjs.com/package/postette
 //  VisSet
 //  Widgets
 //  Visualizers
@@ -24,6 +30,10 @@ function Geospatial()
   this._setUrl = "";
   this._lastTickTime = 0;
   this._lastTickTimestep = -1;
+  
+  // Edge-panel scroller bars
+  this._leftEdgeScrollbar = null;
+  this._rightEdgeScrollbar = null;
 
   // Visualizers
   this._nodesVis = null;
@@ -65,6 +75,8 @@ Geospatial.kInsetFadeDurationMs = 100;  // ms
 Geospatial.kSceneModeAnimationTimeSec = 1.5;
 Geospatial.kCOMPSProdPrefix = "https://comps.idmod.org";
 Geospatial.kCOMPSExploreSim = "/#explore/Simulations?filters=Id=";
+Geospatial.kLeftEdgePanel = "left";
+Geospatial.kRightEdgePanel = "right";
 
 //------------------------------------------------------------------------------
 // Public functions
@@ -76,6 +88,19 @@ Geospatial.prototype.initialize = function()
   // Make sure we're running on a supported browser. If not, this function sets
   // the page to something instructive, so we can bail early.
   if (!this._checkBrowser()) return;
+  
+  // Make sure they're not running an adblocker. We don't have ads, but the
+  // adblockers seem to block our heatmap library.
+  if (!this._checkAdBlocker()) return;
+  
+  // Initialize postette
+  postette.init({
+    echo: true,
+    prefix: false,
+    transitionMilliseconds: 100,
+    parentElement: $(".transportArea")[0],
+    integration: true
+  });
 
   // Put up the spinner
   this.setMessage("Loading...", "wait");
@@ -110,7 +135,7 @@ Geospatial.prototype.initialize = function()
     {
       if (err)
       {
-        instance.setMessage("Error from VisSet.initialize " + err.message, "error");
+        instance.setMessage("Could not initialize VisSet: " + err, "error");
         return;
       }
 
@@ -134,18 +159,21 @@ Geospatial.prototype.initialize = function()
         if (err)
         {
           // err will be errorThrown
-          instance.setMessage("Couldn't load " + url + ", error: " + err,
-            "error");
+          instance.setMessage("Couldn't load " + Utils.shortenUrl(url) +
+              ":<br/>" + err, "indefiniteError");
         }
         else
         {
           instance._set = visSet;
           instance._options = visSet.options;
+          // Since Geospatial doesn't load (or know about) what the visualizers
+          // load, it expects them to return complete human-readable and
+          // prescriptive error messages that can be directly reported.
           instance._doVisualizerLoads(function(err)
           {
             if (err)
             {
-              instance.setMessage(err, "error");
+              instance.setMessage(err, "indefiniteError");
             }
             else
             {
@@ -236,12 +264,19 @@ Geospatial.prototype._onHtmlKeyDown = function(evt)
         evt.which - Utils.keyCodes.k1);
       break;
     case Utils.keyCodes.kSpace:
-      var newValue = !this._viewer.clock.shouldAnimate;
-      if (newValue && this._presentation)
+      $("button.play").trigger("click");
+      // Do play/pause sounds in presentation mode
+      if (this._presentation)
       {
-        $(".animationStart")[0].play();
+        if (this._viewer.clock.shouldAnimate)
+        {
+          $(".animationStart")[0].play();
+        }
+        else
+        {
+          $(".animationStop")[0].play();
+        }
       }
-      this._viewer.clock.shouldAnimate = newValue;
       break;
     case Utils.keyCodes.kLeft:
       this._stepBack(evt.shiftKey);
@@ -306,15 +341,19 @@ Geospatial.prototype._onPlayClick = function(evt)
 {
   evt.stopPropagation();
   evt.preventDefault();
-  this._viewer.clock.shouldAnimate = true;
-};
-
-//------------------------------------------------------------------------------
-Geospatial.prototype._onPauseClick = function(evt)
-{
-  evt.stopPropagation();
-  evt.preventDefault();
-  this._viewer.clock.shouldAnimate = false;
+  var $icon = $(evt.target).closest("button").find("i");
+  if (this._viewer.clock.shouldAnimate)
+  {
+    // Playing, so pause
+    this._viewer.clock.shouldAnimate = false;
+    $icon.removeClass("fa-pause").addClass("fa-play");
+  }
+  else
+  {
+    // Paused, so play
+    this._viewer.clock.shouldAnimate = true;
+    $icon.removeClass("fa-play").addClass("fa-pause");
+  }
 };
 
 //------------------------------------------------------------------------------
@@ -359,7 +398,7 @@ Geospatial.prototype._onHelpClick = function(evt)
     minWidth: 840,
     minHeight: 600,
     width: 840,
-    height: 600,
+    height: $("body").innerHeight() * 0.8,
     position: { my: "center center", at: "center center", of: window },
     create: function() {
       var $chrome = $dialog.closest("div[role='dialog']");
@@ -531,6 +570,19 @@ Geospatial.prototype._onSeekDate = function(jsDate)
 };
 
 //------------------------------------------------------------------------------
+Geospatial.prototype._onUISizeChanged = function(side)
+{
+  if (side === Geospatial.kLeftEdgePanel)
+  {
+    this._leftEdgeScrollbar.update();
+  }
+  else
+  {
+    this._rightEdgeScrollbar.update();
+  }
+};
+
+//------------------------------------------------------------------------------
 // Implementation
 //------------------------------------------------------------------------------
 
@@ -578,7 +630,7 @@ Geospatial.prototype._doVisualizerLoads = function(cb)
 Geospatial.prototype._checkBrowser = function()
 {
   // Chrome 1+
-  var isChrome = (!!window.chrome) ||
+  var isChrome = !!window.chrome ||
     navigator.userAgent.indexOf("HeadlessChrome/") >= 0;
 
   // Firefox 1.0+
@@ -589,12 +641,12 @@ Geospatial.prototype._checkBrowser = function()
     navigator.userAgent.indexOf(' OPR/') >= 0;
 
   // Internet Explorer 6-11
-  //var isIE = /*@cc_on!@*/false || !!document.documentMode;
+  var isIE = /*@cc_on!@*/false || !!document.documentMode;
 
   // Edge 20+
-  //var isEdge = !isIE && !!window.StyleMedia;
+  var isEdge = !isIE && !!window.StyleMedia;
 
-  if (isChrome || isFirefox || isOpera) return true;
+  if ((isChrome || isFirefox || isOpera) && !isIE && !isEdge) return true;
 
   $("body").empty().append("<div class='browserFailBox'>" +
     "<div class='browserFailMessage'>Sorry, the Vis-Tools Geospatial " +
@@ -603,6 +655,31 @@ Geospatial.prototype._checkBrowser = function()
 
   return false;
 };
+
+//------------------------------------------------------------------------------
+Geospatial.prototype._checkAdBlocker = function()
+{
+  // We don't serve ads, so we can't check to see if our ads aren't around, and
+  // that is the usual way of detecting ad blockers. But we can make sure our
+  // heatmap library loaded, which seems to get blocked by ad blockers.
+  if (typeof window.h337 === "object") return true;
+  
+  $("body").empty().append("<div class='browserFailBox adblock'>" +
+      "<div class='browserFailMessage'>" +
+      "It looks like you're using an ad blocker. Vis-Tools doesn't have</br>" +
+      "ads, but the ad blocker has blocked an essential library.</br>" +
+      "Please turn off the ad blocker and click the Reload button below." +
+      "<div class='reload'><button class='reload'>Reload</button></div></div>");
+  $("button.reload").on("click", function(evt)
+  {
+    evt.stopPropagation();
+    evt.preventDefault();
+    $(evt.target).prop("disabled", true).text("Reloading...");
+    window.location.reload(false);
+  });
+
+  return false;
+}
 
 //------------------------------------------------------------------------------
 Geospatial.prototype._stopClock = function()
@@ -614,26 +691,52 @@ Geospatial.prototype._stopClock = function()
 //------------------------------------------------------------------------------
 Geospatial.prototype.setMessage = function(html, infoWarnErrorWait)
 {
-  // Clear case
-  var $area = $(".messageArea");
-  var $text = $(".messageText");
-  $area.removeClass("info warn error wait");
   if (!html || html === "")
   {
-    $text.empty();
+    // Calling setMessage() (i.e. no arguments) clears message
+    //postette.notify("Ready.", { level: "success", delay: -1, pause: 250 });
+    //postette.done();    // Doesn't work
+    postette.dismiss();   // New hotness
     return;
   }
-
+  
   if (infoWarnErrorWait === undefined) infoWarnErrorWait = "info";
-  $text.html(html);
-  if (infoWarnErrorWait !== "none")
-      $area.addClass(infoWarnErrorWait);
+  switch(infoWarnErrorWait)
+  {
+    case "wait":
+      // Persistent message. Cancel with setMessage() (i.e. no arguments)
+      postette.notify(html, { pause: Infinity, integrate: false });
+      break;
+      
+    case "none":
+    case "info":
+      postette.dismiss();       // Take down any spinner
+      postette.success(html);
+      break;
+      
+    case "warn":
+      postette.dismiss();       // Take down any spinner
+      postette.warning(html);
+      break;
+      
+    case "error":
+      postette.dismiss();       // Take down any spinner
+      postette.notify(html, { level: "error" /*, pause: 100000 */ });
+      break;
+      
+    case "indefiniteError":
+      postette.dismiss();       // Take down any spinner
+      // Leave this error up (86400000 = 1 day in ms)
+      postette.notify(html, { level: "error", pause: 86400000 });
+      break;
+  }
 };
 
 //------------------------------------------------------------------------------
 Geospatial.prototype._setupCesium = function()
 {
   // Create the viewer
+  Cesium.Ion.defaultAccessToken = Utils.kCesiumIonApiKey;
   Cesium.BingMapsApi.defaultKey = Utils.kBingMapsApiKey;
   Cesium.MapboxApi.defaultAccessToken = Utils.kMapboxKey;
   Geospatial.kCesiumOptions.creditContainer = $(".credits")[0];
@@ -644,6 +747,8 @@ Geospatial.prototype._setupCesium = function()
   scene.moon = scene.moon.destroy();       // Turn off the moon
   scene.skyBox = scene.skyBox.destroy();   // Turn off the stars
                                            // ...I feel like an angry god.
+  scene.globe.enableLighting = false;      // Turn off sun lighting on globe
+  scene.highDynamicRange = false;          // Use the old GLSL shader (bug 4014)
 
   // Debugging stuff you might want once in a while
   //scene.debugShowFramesPerSecond = true;
@@ -742,7 +847,7 @@ Geospatial.prototype._setupPanels = function()
   }
 
   // Show/hide the COMPS button depending on whether we have a sim id.
-  $("button .comps").toggle("simId" in this._set);
+  $("button.comps").toggle("simId" in this._set);
 };
 
 //------------------------------------------------------------------------------
@@ -750,7 +855,8 @@ Geospatial.prototype._setupClock = function()
 {
   var clock = this._viewer.clock;
   clock.startTime = Cesium.JulianDate.fromDate(new Date(this._set.startDate));
-  Cesium.JulianDate.addDays(clock.startTime, this._set.timestepCount,
+  Cesium.JulianDate.addDays(clock.startTime,
+    this._set.timestepCount > 0 ? this._set.timestepCount : 1,
     clock.stopTime);
   Cesium.JulianDate.addSeconds(clock.startTime,
     this._set.options.clockInitialTimestep * Utils.kSecondsInDay,
@@ -786,6 +892,10 @@ Geospatial.prototype._postLoadInitialize = function()
     $(".rightPanel").edgePanel("getContentSelector");
   var insetContentSelector = ".inset > " +
     $(".inset").insetPanel("getContentSelector");
+  this._leftEdgeScrollbar = new PerfectScrollbar(
+      $(".leftPanel").edgePanel("getContentArea")[0]);
+  this._rightEdgeScrollbar = new PerfectScrollbar(
+      $(".rightPanel").edgePanel("getContentArea")[0]);
 
   // Set up the visualization objects. These objects handle the visualization
   // heavy-lifting. Each adds its own block(s) of UI to the left panel in its
@@ -800,12 +910,16 @@ Geospatial.prototype._postLoadInitialize = function()
     { instance._onNodeSelected(nodeIdOrUndef); });
   this._nodesVis.on("message", function(html, infoWarnErrorWait)
     { instance.setMessage(html, infoWarnErrorWait); });
+  this._nodesVis.on("uiSizeChanged", function()
+    { instance._onUISizeChanged(Geospatial.kRightEdgePanel); });
 
   this._heatmapVis = new CesiumHeatmap(this, this._viewer, this._set);
   this._heatmapVis.initialize(leftContentSelector);
   this._heatmapVis.on("dialogup", function() { instance._stopClock(); });
   this._heatmapVis.on("message", function(html, infoWarnErrorWait)
     { instance.setMessage(html, infoWarnErrorWait); });
+  this._heatmapVis.on("uiSizeChanged", function()
+    { instance._onUISizeChanged(Geospatial.kRightEdgePanel); });
 
   this._czmlVis = new CesiumCzml(this, this._viewer, this._set);
   this._czmlVis.initialize(leftContentSelector);
@@ -825,6 +939,8 @@ Geospatial.prototype._postLoadInitialize = function()
     { instance._nodesVis.focusNode(id); });
   this._perNodeInsetsVis.on("seekDate", function(jsDate)
     { instance._onSeekDate(jsDate); });
+  this._perNodeInsetsVis.on("uiSizeChanged", function()
+    { instance._onUISizeChanged(Geospatial.kLeftEdgePanel); });
 
   this._aggregateInsetsVis = new AggregateInsets(this, this._set);
   this._aggregateInsetsVis.initialize(insetContentSelector);
@@ -834,15 +950,16 @@ Geospatial.prototype._postLoadInitialize = function()
     { instance._onSeekDate(jsDate); });
 
   // Now that the vis objects have added their UI, update the scroll bars.
-  $(leftContentSelector).perfectScrollbar("update");
-  $(rightContentSelector).perfectScrollbar("update");
+  this._leftEdgeScrollbar.update();
+  this._rightEdgeScrollbar.update();
 
   this._bind();
 
   // Zoom in, and when the zoom is done, start the clock
-  var instance = this;
   this._nodesVis.flyTo(function()
   {
+    $("body").addClass("ready");  // So test automation can know when to run
+    
     // Install the tick function
     instance._viewer.clock.onTick.addEventListener(function(clock)
     {
@@ -877,7 +994,7 @@ Geospatial.prototype._setCurTimestep = function(timestep)
   var clock = this._viewer.clock;
   Cesium.JulianDate.addSeconds(clock.startTime,
     timestep * Utils.kSecondsInDay, clock.currentTime);
-}
+};
 
 //------------------------------------------------------------------------------
 Geospatial.prototype._bind = function()
@@ -894,10 +1011,6 @@ Geospatial.prototype._bind = function()
   $("button.play").on("click", function(evt)
   {
     instance._onPlayClick(evt);
-  });
-  $("button.pause").on("click", function(evt)
-  {
-    instance._onPauseClick(evt);
   });
   $("button.save").on("click", function(evt)
   {
@@ -919,8 +1032,6 @@ Geospatial.prototype._bind = function()
   {
     instance._onFileLoaded(evt);
   });
-  $(".leftPanel").edgePanel("getContentArea").perfectScrollbar();
-  $(".rightPanel").edgePanel("getContentArea").perfectScrollbar();
   $("html").on("keydown", function(evt)
   {
     instance._onHtmlKeyDown(evt);
@@ -1123,7 +1234,6 @@ Geospatial.prototype._togglePresentationMode = function()
 {
   this._presentation = !this._presentation;
   var areas = [
-    $(".messageArea"),                  // Message, help button
     $(".transportArea"),                // Transport buttons
     $(".overlay"),                      // Panels
     $(this._viewer.timeline.container), // Timeline
@@ -1138,6 +1248,7 @@ Geospatial.prototype._togglePresentationMode = function()
   {
     // Hide overlay UI
     _.forEach(areas, function($area) { $area.show(); });
+    $(".cesiumContainer").focus();  // Ensure wheel mouse works
   }
 };
 

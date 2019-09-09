@@ -20,16 +20,14 @@ Usage::
 """
 
 # imports
-from __future__ import print_function
 from builtins import range
 from builtins import object
 import struct
 import os
 import array
 import copy
+import math
 import sys
-
-k_python3 = sys.version_info.major == 3
 
 
 # ==============================================================================
@@ -229,20 +227,14 @@ class SpatialBinary(object):
                 bin_file.write(struct.pack("<i", len(self.timesteps)))
 
                 # Write out the node IDs
-                if k_python3:
-                    node_ids.tofile(bin_file)
-                else:
-                    node_ids.write(bin_file)
+                node_ids.tofile(bin_file)
 
                 # Write out the values for each timestep
                 for values_dict in self.timesteps:
                     values = array.array("f")
                     for node_id in node_ids_array:
                         values.append(values_dict[node_id])
-                    if k_python3:
-                        values.tofile(bin_file)
-                    else:
-                        values.write(bin_file)
+                    values.tofile(bin_file)
         except BaseException:
             if self._verbose:
                 print("SpatialBinary.write_binary: Exception writing spatial "
@@ -368,6 +360,8 @@ class SpatialBinary(object):
                     sb1.value_max =\
                         new_value if new_value > sb1.value_max else sb1.value_max
                     ts1[nodeId] = new_value
+            sb1.value_min = SpatialBinary._condition_value(sb1.value_min)
+            sb1.value_max = SpatialBinary._condition_value(sb1.value_max)
         except(BaseException):
             # print(sys.exc_info()[0])
             raise
@@ -457,10 +451,7 @@ class SpatialBinary(object):
                 # read node IDs
                 node_ids_data = bin_file.read(self.node_count * 4)
                 node_ids = array.array("i")
-                if k_python3:
-                    node_ids.frombytes(node_ids_data)
-                else:
-                    node_ids.fromstring(node_ids_data)
+                node_ids.frombytes(node_ids_data)
 
                 # read timestep data
                 self.timesteps = []
@@ -468,10 +459,7 @@ class SpatialBinary(object):
                     entries = {}
                     values = array.array("f")
                     values_data = bin_file.read(self.node_count * 4)
-                    if k_python3:
-                        values.frombytes(values_data)
-                    else:
-                        values.fromstring(values_data)
+                    values.frombytes(values_data)
                     for i in range(self.node_count):
                         value = values[i]
                         # Note: set value_min/value_max BEFORE zero check.
@@ -483,8 +471,23 @@ class SpatialBinary(object):
                             continue
                         entries[node_ids[i]] = values[i]
                     self.timesteps.append(entries)
+
+                # make sure we didn't end up with infinities or NaNs
+                self.value_min = SpatialBinary._condition_value(self.value_min)
+                self.value_max = SpatialBinary._condition_value(self.value_max)
         except BaseException:
             if self._verbose:
                 print("SpatialBinary._read_binary: Exception reading spatial "
                       "binary %s" % bin_file_path, file=sys.stderr)
             raise
+
+    # --------------------------------------------------------------------------
+    @staticmethod
+    def _condition_value(value):
+        if math.isnan(value):
+            value = 0
+        elif value == math.inf:
+            value = sys.float_info.max
+        elif value == -math.inf:
+            value = sys.float_info.min
+        return value

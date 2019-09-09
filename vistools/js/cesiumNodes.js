@@ -5,6 +5,7 @@
 //  "dialogup": no args. Emitted when we put up a modal dialog
 //  "nodeselected": arg nodeIdOrUndef. Emitted on node select or deselect
 //  "message": emitted to send messages to the app's message area
+//  "uiSizeChanged": emitted when UI changes to cause scrollbar update
 //
 // Depends on:
 //  lodash
@@ -241,7 +242,7 @@ CesiumNodes.prototype._onRollupChanged = function(evt, data)
     this.setVisible(data.newValue);
   else if (data.type === "openState")
     Persist.set("nodeUiRollupOpenState", data.newValue);
-  $(this._selector).perfectScrollbar("update");
+  this.emit("uiSizeChanged", null);
 };
 
 //------------------------------------------------------------------------------
@@ -823,15 +824,13 @@ CesiumNodes.prototype._initializeShapes = function()
       show: true,
       appearance: new Cesium.MaterialAppearance({
         material: Cesium.Material.fromType("Color",
-          {
-            color: color,
-            translucent: true
-          })
+            { color: color }),
+        translucent: true
       }),
       color: color  // this is the one we'll combine with opacity
     };
 
-    // Apply static bindings
+    // Apply static ahd fixed bindings
     var binding = { source: "none" };
     try
     {

@@ -2,7 +2,6 @@
 
 # This script is meant to be run from within the target simulation directory.
 
-from __future__ import print_function
 import time as tm
 from os import path, getcwd
 from vis_tools import VisSet, SpatialBinary, SpatialReports

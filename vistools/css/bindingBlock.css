@@ -38,6 +38,10 @@
 .no-close .ui-dialog-titlebar-close {
   display: none;
 }
+.functionDialog {
+  overflow-y: auto;
+  width: auto !important;
+}
 .functionDialog .infoArea {
   display: table;
   width: 100%;

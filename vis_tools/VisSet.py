@@ -30,10 +30,8 @@ Minimal usage::
 """
 
 # imports
-from __future__ import print_function
 from builtins import range
 from builtins import object
-from past.builtins import basestring
 import json
 import copy
 from os import path
@@ -135,6 +133,10 @@ class VisSet(object):
 
         script_dir = path.dirname(__file__)
         paths = [
+            # Note: we specifically check for ../vistools/defaultvisset.json
+            # FIRST because we consider the one in the client directory to be
+            # canonical, and we'd rather use that one instead of the one in the
+            # python package directory.
             path.join(script_dir, "..", "vistools", VisSet.k_default_visset),
             path.join(script_dir, VisSet.k_default_visset),
             path.join(script_dir, "..", VisSet.k_default_visset)
@@ -1117,10 +1119,10 @@ class VisSet(object):
             "shapeExtrusion".
 
             source_name (str): The name of the data source to which to bind.
-            E.g. "SpatialReport_Prevalence" or "BirthRate"
+            E.g. "SpatialReport_Prevalence" or "BirthRate". Can be None.
 
-            func (str): The function to use on the binding. The details of
-            function syntax are documented elsewhere, but in general this
+            func (str): The function to use on the binding or None. The details
+            of function syntax are documented elsewhere, but in general this
             may be "none()", some built-in function e.g. "scale(3, 20)", or
             a custom Javascript function body, e.g.::
 
@@ -1633,12 +1635,12 @@ class VisSet(object):
         links = visset["links"]
 
         # Test for and update old-style inset
-        if "inset" in links and isinstance(links["inset"], basestring):
+        if "inset" in links and isinstance(links["inset"], str):
             # This is an old-style string URL. Upgrade it to a new-style inset
             # object.
             links["inset"] = {"url": links["inset"]}
 
-        if isinstance(asset_map_or_url_root, basestring):
+        if isinstance(asset_map_or_url_root, str):
             # Update url roots
             url_root = asset_map_or_url_root
             # Update inset

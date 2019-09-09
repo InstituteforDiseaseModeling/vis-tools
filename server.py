@@ -1,6 +1,3 @@
-from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
 import http.server
 import socketserver
 import subprocess
@@ -19,7 +16,10 @@ k_command = [
 
 # Fire up an HTTP server serving up the current directory
 try:
-    http.server.SimpleHTTPRequestHandler.extensions_map[".js"] = "application/x-javascript"
+    # Seems http.server was serving up AJAX script files as text/plain, and
+    # newer versions of Chrome would as a result refuse to execute them.
+    http.server.SimpleHTTPRequestHandler.extensions_map[".js"] =\
+        "application/x-javascript"
     httpd = socketserver.TCPServer(("", k_port),
                                    http.server.SimpleHTTPRequestHandler)
 except socket.error:

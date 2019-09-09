@@ -48,6 +48,10 @@ VisSet.kNodesAsShapes = "Shapes";
 // Node keys NOT offered as static sources
 VisSet.kNodeNonSourceKeys = [ "altitude", "latitude", "longitude", "nodeId" ];
 
+// Timeout for loads. Really only need this if somehow we end up doing cross-
+// domain GETs on the spatial binaries, which never call back in any way.
+VisSet.kSpatialBinaryTimeoutMs = 10000;
+
 //------------------------------------------------------------------------------
 // Public functions
 //------------------------------------------------------------------------------
@@ -66,7 +70,7 @@ VisSet.initialize = function(defaultsUrl, callback)
     })
     .fail(function(jqxhr, textStatus, errorThrown)
     {
-      callback(errorThrown);
+      callback(Utils.formatError(jqxhr, errorThrown));
     });
 };
 
@@ -146,8 +150,10 @@ VisSet.prototype.setEmpty = function()
 };
 
 //------------------------------------------------------------------------------
-// Given a set of sinks, returns a dictionary of sinks where the source is
-// static and the function IS NOT "none()".
+// Given a set of sinks, returns a dictionary of sinks where
+//   * source is static and the function IS NOT "none()"
+// OR
+//   * source is None and the function is "fixed(...)"
 //------------------------------------------------------------------------------
 VisSet.prototype.getStaticSinks = function(sinks)
 {
@@ -158,7 +164,13 @@ VisSet.prototype.getStaticSinks = function(sinks)
     // Now we have a binding, which is a source and a function. Look up the
     // source to see if it is static. If so, include it in the result.
     var source = instance._sources[sink.source];
-    if (source && source.type === "static" && source.friendlyName !== "None")
+    if (!source) return;
+    var isNone = source.friendlyName === "None";
+    if (source.type === "static" && !isNone)
+    {
+      result[sinkKey] = sink;
+    }
+    else if (isNone && sink.function.startsWith("fixed("))
     {
       result[sinkKey] = sink;
     }
@@ -232,6 +244,9 @@ VisSet.load = function(url, callback)
     {
       var visSet = new VisSet();
       visSet = _.merge(visSet, data);
+      
+      // Just in case, ensure that timestepCount is an integer
+      visSet.timestepCount = Math.trunc(visSet.timestepCount);
 
       visSet._loadLinks(function(err)
       {
@@ -250,8 +265,8 @@ VisSet.load = function(url, callback)
     })
     .fail(function(jqxhr, textStatus, errorThrown)
     {
-        var visSet = new VisSet();
-      callback(errorThrown);
+      var visSet = new VisSet();
+      callback(Utils.formatError(jqxhr, errorThrown));
     });
 };
 
@@ -328,24 +343,31 @@ VisSet.prototype._loadLinks = function(callback)
 VisSet.prototype._loadSpatialBinary = function(url, friendlyName, callback)
 {
   // Read binary. bin variable will be a Uint8Array.
-  var xhr = new XMLHttpRequest();
-  xhr.open("GET", url, true);
-  xhr.responseType = "arraybuffer";
-  xhr.onload = function()
+  var jqxhr = null;
+  var timeout = setTimeout(function()
   {
-    if (this.status === 200)
-    {
-      var spatialBinary = new SpatialBinary(friendlyName);
-      spatialBinary.setData(this.response);
-      callback(null, spatialBinary);
-    }
-    else
-    {
-      callback("Couldn't load spatial channel " + url + ": " +
-        xhr.statusText);
-    }
-  };
-  xhr.send();
+    if (jqxhr)
+      jqxhr.abort();
+  }, VisSet.kSpatialBinaryTimeoutMs);
+  var jqxhr = $.ajax({
+    url: url,
+    method: "GET",
+    processData: false,
+    dataType: "binary",
+    responseType: "arraybuffer"
+  })
+  .done(function(data, textStatus, xhr)
+  {
+    var spatialBinary = new SpatialBinary(friendlyName);
+    spatialBinary.setData(data);
+    clearTimeout(timeout);
+    callback(null, spatialBinary);
+  })
+  .fail(function(xhr, textStatus, errorThrown)
+  {
+    clearTimeout(timeout);
+    callback(Utils.formatError(xhr, errorThrown));
+  });
 };
 
 //------------------------------------------------------------------------------

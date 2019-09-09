@@ -12,9 +12,7 @@ Usage::
 """
 
 # imports
-from __future__ import print_function
 from builtins import range
-from past.builtins import basestring
 from builtins import object
 import json
 import sys
@@ -486,7 +484,7 @@ class Demographics(object):
     #     any nodes that match by NodeID.
     # --------------------------------------------------------------------------
     def _read(self, json_file_path_or_list):
-        if isinstance(json_file_path_or_list, basestring):
+        if isinstance(json_file_path_or_list, str):
             # Just one file so easy
             base = self._read_json_demographics(json_file_path_or_list)
             self.source_file = json_file_path_or_list
@@ -672,7 +670,7 @@ class Demographics(object):
                 # keys in there
                 Demographics._substitute_keys(raw[section], string_table)
             elif isinstance(raw[section], list) and\
-                    not isinstance(raw[section], basestring):
+                    not isinstance(raw[section], str):
                 # Section is a list, so go through all the list elements and
                 # do recursive substitutions in each element that is a dict.
                 for elem in raw[section]:

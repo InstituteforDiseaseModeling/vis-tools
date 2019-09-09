@@ -14,15 +14,13 @@ Usage::
 """
 
 # imports
-from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
 from builtins import range
 from builtins import object
 from glob import glob
 from os import path
 import json
 import sys
+import re
 
 
 # ==============================================================================
@@ -58,7 +56,8 @@ class SpatialReports(object):
     # --------------------------------------------------------------------------
     # Constants
     # --------------------------------------------------------------------------
-    k_spatial_filename_prefix = "SpatialReport_"
+    k_spatial_filename_glob = "SpatialReport*_*.bin"
+    k_spatial_leaf_re = "^SpatialReport[^_]*_(.*)"
 
     # --------------------------------------------------------------------------
     def __init__(self, spatial_dir="", verbose=False):
@@ -249,7 +248,7 @@ class SpatialReports(object):
                 raise IOError("Directory %s is missing or inaccessible." %
                               self.source_dir)
             self.paths = glob(path.join(self.source_dir,
-                              self.k_spatial_filename_prefix + "*.bin"))
+                              self.k_spatial_filename_glob))
             for i in range(0, len(self.paths)):
                 self.paths[i] = self.paths[i].replace("\\", "/")
         except BaseException:
@@ -262,4 +261,8 @@ class SpatialReports(object):
     # --------------------------------------------------------------------------
     def _friendly_name(self, fp):
         leaf = path.splitext(path.basename(fp))[0]  # Basename with no ext
-        return leaf[len(self.k_spatial_filename_prefix):].replace("_", " ")
+        m = re.match(self.k_spatial_leaf_re, leaf)
+        if m is not None:
+            return m.group(1).replace("_", " ")
+        else:
+            return leaf

@@ -4,6 +4,7 @@
 // Events:
 //  "dialogup": emitted when we put up a modal dialog
 //  "message": emitted to send messages to the app's message area
+//  "uiSizeChanged": emitted when UI changes to cause scrollbar update
 //
 // Depends on:
 //  lodash
@@ -56,6 +57,7 @@ CesiumHeatmap.load = function(visset, callback)
   callback(null);
 };
 
+//------------------------------------------------------------------------------
 CesiumHeatmap.prototype.initialize = function(selector)
 {
   this._selector = selector;
@@ -174,7 +176,7 @@ CesiumHeatmap.prototype._onRollupChanged = function(evt, data)
     this.setVisible(data.newValue);
   else if (data.type === "openState")
     Persist.set("heatmapUiRollupOpenState", data.newValue);
-  $(this._selector).perfectScrollbar("update");
+  this.emit("uiSizeChanged", null);
 };
 
 //------------------------------------------------------------------------------

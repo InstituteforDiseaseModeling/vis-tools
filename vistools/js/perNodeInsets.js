@@ -8,6 +8,7 @@
 //  "recenter": emitted to cause caller to recenter on data
 //  "focusNodeId": emitted to cause caller to focus view on a given node id
 //  "seekDate": emitted to cause caller to move to given JS Date argument
+//  "uiSizeChanged": emitted when ui size changes so caller can update scroll
 //
 // Depends on:
 //  lodash
@@ -81,7 +82,9 @@ PerNodeInsets.prototype.update = function(curXValue)
       var x = chart.xAxis[0].toPixels(curXValue, true); // sense of last parameter is backwards
       var bgRect = $chart.find("rect.highcharts-plot-background")[0];
       var timebar = $chart.find("rect.timebar")[0];
-      timebar.setAttributeNS(null, "x", x + parseFloat(bgRect.getAttribute("x")));
+      var newX = x + parseFloat(bgRect.getAttribute("x"));
+      if (!isNaN(newX))
+        timebar.setAttribute("x", newX);
     });
 };
 
@@ -111,7 +114,7 @@ PerNodeInsets.prototype._onRollupChanged = function(evt, data)
 {
   if (data.type === "openState")
     Persist.set("perNodeInsetUiRollupOpenState", data.newValue);
-  $(this._selector).perfectScrollbar("update");
+  this.emit("uiSizeChanged", null);
 };
 
 //------------------------------------------------------------------------------
@@ -146,7 +149,7 @@ PerNodeInsets.prototype._onNodeSelected = function(nodeIdOrUndef, curXValue)
     .val(nodeIdOrUndef ? nodeIdOrUndef : "");
   var $container = $(this._selector);
   $container[0].scrollTop = this._lastScrollTop;
-  $container.perfectScrollbar("update");
+  this.emit("uiSizeChanged", null);
   this.update(curXValue);
 };
 
@@ -362,7 +365,8 @@ PerNodeInsets.prototype._addChart = function($chartArea, series, title, height)
       type: "line",
       events: {
         click: function(evt) { instance._onChartClick(evt); }
-      }
+      },
+      styledMode: true
     },
     title: {
       text: series.name,
@@ -391,15 +395,18 @@ PerNodeInsets.prototype._addChart = function($chartArea, series, title, height)
     series: [ series ],
     credits: { enabled: false }
   };
-  var chart = Highcharts.chart($chart[0], options);
-  var chartRect = $chart.find("rect.highcharts-plot-background")[0];
-  var timebar = chart.renderer.rect(
-    chartRect.x.baseVal.value, chartRect.y.baseVal.value, 1,
-    chartRect.height.baseVal.value);
-  $chart.find(".highcharts-color-0").css("stroke", this._opts.traceColor);
-  timebar.attr("class", "timebar");
-  timebar.add().toFront();
-  $chart.find("rect.timebar").css("fill", this._opts.timeBarColor);
+  var chart = Highcharts.chart($chart[0], options, function complete()
+  {
+    // In this context, 'this' will be the chart object.
+    var chartRect = $chart.find("rect.highcharts-plot-background")[0];
+    var timebar = this.renderer.rect(
+        chartRect.x.baseVal.value, chartRect.y.baseVal.value, 1,
+        chartRect.height.baseVal.value);
+    $chart.find(".highcharts-color-0").css("stroke", instance._opts.traceColor);
+    timebar.attr("class", "timebar");
+    timebar.add().toFront();
+    $chart.find("rect.timebar").css("fill", instance._opts.timeBarColor);
+  });
 };
 
 //------------------------------------------------------------------------------

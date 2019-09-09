@@ -1,8 +1,7 @@
 # import sys
 from setuptools import setup, find_packages
 
-requires = ['czml>=0.3.3',
-            'future>=0.16.0']
+requires = ['czml>=0.3.3']
 
 long_description = "The Institute for Disease Modeling (IDM) develops complex "\
     "software for disease modeling. The primary software, Epidemiological "\
@@ -12,12 +11,8 @@ long_description = "The Institute for Disease Modeling (IDM) develops complex "\
     "output. Vis-Tools is a collection of software tools that aids in the "\
     "visualization of geospatial simulation data."
 
-# if sys.version_info[0] == 2:
-#     # backport of enum functionality for Python 2
-#     requires.append('enum34>=1.1.6')
-
 setup(name='vis-tools',
-      version='1.3.1',
+      version='1.4',
       description='Python preprocessing classes for advanced visualization',
       long_description=long_description,
       url='https://github.com/InstituteforDiseaseModeling/vis-tools',
@@ -29,7 +24,6 @@ setup(name='vis-tools',
           'Intended Audience :: Science/Research',
           'Natural Language :: English',
           'Operating System :: Microsoft :: Windows',
-          'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3.6',
           'Programming Language :: JavaScript',
           'Topic :: Scientific/Engineering :: Visualization'
@@ -41,9 +35,9 @@ setup(name='vis-tools',
       },
       install_requires=requires,
       include_package_data=True,
+      package_data={'': ['defaultvisset.json']},
       keywords='vistools vis-tools vis_tools preprocessing visualization ' +
                'idm emod dtk',
       packages=find_packages(exclude=['test']),
-      package_data={'vis_tools': ['../vistools/defaultvisset.json']},
-      python_requires='>=2.7, >=3.6',
+      python_requires='>=3.6',
       zip_safe=False)

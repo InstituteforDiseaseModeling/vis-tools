@@ -51,9 +51,9 @@ CesiumCzml.load = function(visset, callback)
           linkSpec.dataSource = dataSource;
           cb(null);
         })
-        .otherwise(function()
+        .otherwise(function(error)
         {
-          cb(url);
+          cb("Couldn't load " + Utils.shortenUrl(url) + ":\n" + error);
         });
     });
 

@@ -9,36 +9,72 @@ software.
 For complete information on the installation and use of Vis-Tools, see the
 [documentation](http://idmod.org/docs/vis-tools/).
 
+REQUIREMENTS
+------------
 
-IMPORTANT
----------
+1. [Python 3.x](https://www.python.org/downloads/), in PATH
+2. [npm 6.x](https://www.npmjs.com/get-npm), in PATH
 
-Make sure you run the package install script before you try running Vis-Tools
-python web server:
-    
-    cd <vis-tools-directory>
+
+INSTALLATION
+------------
+
+1. Git clone the Vis-Tools repo to some directory ```<dir>```
+
+    ```
+    git clone https://github.com/InstituteforDiseaseModeling/vis-tools <dir>
+    cd <dir>
+    ```
+
+2. Ensure Python is in PATH
+
+    ```
+    python --version
+    ```
+
+3. Ensure npm is in PATH
+
+    ```
+    npm --version        # ensure npm is in PATH, is version 6.x
+    ```
+
+4. Install Vis-Tools python package
+
+    ```
     python setup.py install
-    
+    ```
 
+5. Install client libraries
+
+    ```
+    cd vistools
+    npm install
+    ```
+    
 For full details, read the [Prerequisites](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/prereqs.html)
 page and [Quick start](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/intro.html)
 pages.
 
-V1.3.1
-------
+V1.4
+----
 
-Version 1.3.1 fixes some compatibility problems with Chrome versions 71+. If
-you're running Vis-Tools standalone, be sure to pull the latest version and do:
+The Vis-Tools 1.4 release:
 
-  cd <vis-tools-directory>
-  python setup.py install
+* Fixes a number of bugs
+* Updates third-party libraries to fix bugs and security issues
+* Eliminates cached Javascript libraries.
+* Drops Python 2.x support. Please use Python 3.x with Vis-Tools.
 
-
-This will ensure you're using the latest Python classes.
+Please be sure to follow the steps in the Installation section above.
 
 
 Previous versions
 =================
+
+V1.3.1
+------
+
+Version 1.3.1 fixes some compatibility problems with Chrome versions 71+.
 
 
 V1.3

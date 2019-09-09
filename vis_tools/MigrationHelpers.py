@@ -15,7 +15,6 @@ migration culling are developed more methods will be added here as needed.
 """
 
 # imports
-from __future__ import print_function
 from builtins import object
 import sys
 

@@ -268,6 +268,7 @@ $.widget("custom.bindingBlock", {
         }],
       modal: true,
       width: this.kDfltFunctionDialogWidth,
+      maxHeight: $("body").innerHeight() * 0.9,
       position: { my: "center center", at: "center center", of: window },
       create: function() {
         var $chrome = $dialog.closest("div[role='dialog']");

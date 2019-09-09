@@ -106,6 +106,8 @@ Utils.keyCodes = {
   kF12: 123
 };
 
+Utils.kCesiumIonApiKey =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwMmNlODhmMC1iZTk1LTRlNDItOWRjNi05MWQ3Y2JhOGNhNDQiLCJpZCI6MTE2OTEsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1NTk1OTcyOTF9.OwuaQ-HpuSkHVqSjt6oK0avT_aOpzIFrrdzpIocvado";
 Utils.kBingMapsApiKey =
   "Ak1OcXpB05wY5105UpeBK0jkeog89tc8nQCJLBhSeY5Eh16Cdn6xMGg-wp3O1bTc";
 Utils.kMapboxKey =
@@ -113,6 +115,8 @@ Utils.kMapboxKey =
 
 Utils.kSecondsInDay = 60 * 60 * 24;   // 86400
 Utils.kOneMeterInDegrees = 1.0 / 60.0 / 1850.0;
+
+Utils.kShortenUrlHeadLength = 50;
 
 //------------------------------------------------------------------------------
 Utils.isLocalhost = function()
@@ -308,6 +312,33 @@ Utils.constrainRectWithinRect = function(constrain, within)
   return result;
 };
 
+//------------------------------------------------------------------------------
+Utils.shortenUrl = function(url)
+{
+  var result = url.substring(0, Utils.kShortenUrlHeadLength - 1);
+  var lastSlashIndex = url.lastIndexOf("/");
+  if (lastSlashIndex > Utils.kShortenUrlHeadLength &&
+      url.length >= lastSlashIndex)
+  {
+    result += "..." + url.substring(lastSlashIndex + 1);
+  }
+  return result;
+};
+
+//------------------------------------------------------------------------------
+Utils.formatError = function(xhr, errorThrown)
+{
+  if (xhr.status === 200 && errorThrown)
+  {
+    // 200 status but errorThrown: probably a JSON parse error
+    return errorThrown;
+  }
+  else
+  {
+    return xhr.status + " - " + xhr.statusText;
+  }
+};
+
 //==============================================================================
 // jQuery extensions
 //==============================================================================
@@ -338,3 +369,67 @@ $.fn.selectAll = function()
     $this.selectRange(0, $this.val().length);
   });
 };
+
+//------------------------------------------------------------------------------
+// use this transport for "binary" data type
+//   $.ajax({
+//     url: url,
+//     method: "GET",
+//     processData: false,
+//     dataType: "binary",
+//     responseType: "arraybuffer",  // or "blob"
+//     success: function(data, textStatus, xhr)
+//     {
+//       // data is an arraybuffer
+//     },
+//     error: function(xhr, textStatus, errorThrown)
+//     {
+//       // error gets full xhr
+//     }
+//   });
+//------------------------------------------------------------------------------
+$.ajaxTransport("+binary", function (options, originalOptions, jqXHR) {
+  // check for conditions and support for blob / arraybuffer response type
+  if (window.FormData &&
+      ((options.dataType && (options.dataType === 'binary')) ||
+          (options.data && ((window.ArrayBuffer && options.data instanceof ArrayBuffer) ||
+              (window.Blob && options.data instanceof Blob)))))
+  {
+    return {
+      // create new XMLHttpRequest
+      send: function (headers, callback) {
+        // setup all variables
+        var xhr = new XMLHttpRequest(),
+            url = options.url,
+            type = options.type,
+            async = options.async || true,
+            // blob or arraybuffer. Default is blob
+            dataType = options.responseType || "blob",
+            data = options.data || null,
+            username = options.username || null,
+            password = options.password || null;
+
+        xhr.addEventListener('load', function () {
+          var data = {};
+          data[options.dataType] = xhr.response;
+          // make callback and send data
+          callback(xhr.status, xhr.statusText, data, xhr.getAllResponseHeaders());
+        });
+
+        xhr.open(type, url, async, username, password);
+
+        // setup custom headers
+        for (var i in headers)
+        {
+          xhr.setRequestHeader(i, headers[i]);
+        }
+
+        xhr.responseType = dataType;
+        xhr.send(data);
+      },
+      abort: function () {
+        // Function is required, but don't call jqXHR, since it called us.
+      }
+    };
+  }
+});

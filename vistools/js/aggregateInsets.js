@@ -55,8 +55,8 @@ AggregateInsets.load = function(visset, callback)
       {
         // See comment in .done() above.
         visset.links.inset.data = null;
-        callback("ERROR: Could not load inset chart data: " +
-          errorThrown, "error");
+        callback("Couldn't load " + Utils.shortenUrl(url) + ":<br/>" +
+            Utils.formatError(jqxhr, errorThrown));
       });
   }
 };
@@ -88,8 +88,11 @@ AggregateInsets.prototype.update = function(curXValue)
   var bgRect = $chart.find("rect.highcharts-plot-background")[0];
   var timebar = $chart.find("rect.timebar")[0];
   var chartRect = $chart.find("rect.highcharts-plot-background")[0];
-  timebar.setAttributeNS(null, "x", x + parseFloat(bgRect.getAttribute("x")));
-  timebar.setAttributeNS(null, "height",
+  if (!bgRect || !timebar || !chartRect) return;
+  var newX = x + parseFloat(bgRect.getAttribute("x"));
+  if (!isNaN(newX))
+    timebar.setAttribute("x", newX);
+  timebar.setAttribute("height",
     parseFloat(chartRect.getAttribute("height")));
 };
 
@@ -104,6 +107,7 @@ AggregateInsets.prototype.getState = function()
 AggregateInsets.prototype.setState = function(state)
 {
   $(this._selector).find("select").val(state.channel);
+  this._onSelectChange(new Event("change"));    // Because .val does not trigger
 };
 
 //------------------------------------------------------------------------------
@@ -113,8 +117,12 @@ AggregateInsets.prototype._onSelectChange = function(evt)
 {
   evt.stopPropagation();
   evt.preventDefault();
-  this._updateChart();
-  this.update(this._lastCurXValue);
+  var instance = this;
+  this._updateChart(function done()
+  {
+    // Called when the chart is done rendering
+    instance.update(instance._lastCurXValue);
+  });
 };
 
 //------------------------------------------------------------------------------
@@ -122,8 +130,11 @@ AggregateInsets.prototype._onLayoutChanged = function()
 {
   var $chart = $(this._selector).find("div.chart");
   var chart = $chart.highcharts();
-  chart.reflow();
-  this.update(this._lastCurXValue);
+  if (chart)
+  {
+    chart.reflow();
+    this.update(this._lastCurXValue);
+  }
 };
 
 //------------------------------------------------------------------------------
@@ -200,7 +211,7 @@ AggregateInsets.prototype._createSeries = function(channelName, channel)
 };
 
 //------------------------------------------------------------------------------
-AggregateInsets.prototype._updateChart = function()
+AggregateInsets.prototype._updateChart = function(doneCallback)
 {
   var instance = this;
   var channelName = $(this._selector).find("select").val();
@@ -219,7 +230,8 @@ AggregateInsets.prototype._updateChart = function()
       type: "line",
       events: {
         click: function(evt) { instance._onChartClick(evt); }
-      }
+      },
+      styledMode: true
     },
     title: { text: null },
     legend: { enabled: false },
@@ -245,13 +257,18 @@ AggregateInsets.prototype._updateChart = function()
     series: [ series ],
     credits: { enabled: false }
   };
-  var chart = Highcharts.chart($chart[0], options);
-  var chartRect = $chart.find("rect.highcharts-plot-background")[0];
-  var timebar = chart.renderer.rect(
-    chartRect.x.baseVal.value, chartRect.y.baseVal.value, 1,
-    chartRect.height.baseVal.value);
-  $chart.find(".highcharts-color-0").css("stroke", this._opts.traceColor);
-  timebar.attr("class", "timebar");
-  timebar.add().toFront();
-  $chart.find("rect.timebar").css("fill", this._opts.timeBarColor);
+  var chart = Highcharts.chart($chart[0], options, function complete()
+  {
+    // In this context, 'this' will be the chart
+    var chartRect = $chart.find("rect.highcharts-plot-background")[0];
+    var timebar = this.renderer.rect(
+        chartRect.x.baseVal.value, chartRect.y.baseVal.value, 1,
+        chartRect.height.baseVal.value);
+    $chart.find(".highcharts-color-0").css("stroke", instance._opts.traceColor);
+    timebar.attr("class", "timebar");
+    timebar.add().toFront();
+    $chart.find("rect.timebar").css("fill", instance._opts.timeBarColor);
+    if (doneCallback)
+      doneCallback();
+  });
 };
