@@ -4,8 +4,6 @@
 # You can set these variables from the command line.
 SPHINXOPTS    = -W
 SPHINXBUILD   = sphinx-build
-INDEXBUILD    = python $(BUILDDIR)/../scripts/gti.py
-URLPREFIX     = "."
 PAPER         =
 BUILDDIR      = _build
 
@@ -45,13 +43,12 @@ help:
 	@echo "  linkcheck  to check all external links for integrity"
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 	@echo "  coverage   to run coverage check of the documentation (if enabled)"
-	@echo "  tipuesearch to make tipue static search content"
 	@echo "  dummy      to check syntax errors of document sources"
 
 .PHONY: clean
 clean:
 	rm -rf $(BUILDDIR)/*
-	rm -rf idmtools*.rst
+	rm -rf vis_tools*.rst
 
 .PHONY: external generate-api
 
@@ -63,16 +60,9 @@ generate-api:
 .PHONY: html
 html: generate-api
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
-	$(INDEXBUILD) -i $(BUILDDIR)/html -o $(BUILDDIR)/html/_static/tipuesearch/tipuesearch_content.js -u $(URLPREFIX)
 	@echo
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
-
-.PHONY: tipuesearch
-tipuesearch:
-	$(INDEXBUILD) -i $(BUILDDIR)/html -o $(BUILDDIR)/html/_static/tipuesearch/tipuesearch_content.js -u $(URLPREFIX)
-	@echo
-	@echo "Build finished. Updated tipuesearch content is at $(BUILDDIR)/html/_static/tipuesearch/tipuesearch_content.js"
 
 .PHONY: dirhtml
 dirhtml:
