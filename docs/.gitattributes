@@ -1,0 +1,8 @@
+# git config
+.gitattributes text
+.gitignore text
+.gitconfig text
+
+# source code
+*.rst text eol=crlf
+
