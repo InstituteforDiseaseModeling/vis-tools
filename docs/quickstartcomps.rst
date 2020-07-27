@@ -5,6 +5,10 @@ Running |VT| from |COMPS_s|
 This page gives a quick overview of how to run |VT| from within the |COMPS_s|
 system.
 
+.. note::
+
+    To access and use |COMPS_s| you must receive approval and credentials from |IDM_s|. Send your request to support@idmod.org.
+
 To use |VT| this way, you'll need to create or otherwise have access to a
 spatial simulation, which is to say, a simulation with multiple nodes that have
 latitude/longitude geospatial locations.
