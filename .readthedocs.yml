@@ -23,7 +23,7 @@ python:
   version: 3.7
   install:
     - requirements: docs/requirements.txt
-    - method: setup
+    - method: setuptools
       path: . 
 
 # Optionally rank topics in search results, between -10 (lower) and 10 (higher).
