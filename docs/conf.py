@@ -181,7 +181,7 @@ html_static_path = ['_static']
 
 html_context = {
     'css_files': [
-        '_static/theme_overrides.css',
+        '_static/theme_overrides.css'
         ]
 }
 # Add any extra paths that contain custom files (such as robots.txt or

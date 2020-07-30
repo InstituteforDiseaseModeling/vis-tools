@@ -20,7 +20,6 @@ Documentation structure
    intro
    preproc
    geospat
-   modules
    glossary
 
 .. The list above only contains my top-level outline elements.
