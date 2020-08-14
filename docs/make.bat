@@ -81,7 +81,6 @@ if "%1" == "generate-api" (
 	del vis_tools.rst >nul 2>&1
     sphinx-apidoc -f -e -o . ../vis_tools
     REN modules.rst vis_tools.rst
-    del modules.rst
 	goto end
 )
 
