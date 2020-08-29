@@ -48,6 +48,7 @@ if "%1" == "help" (
 if "%1" == "clean" (
 	for /d %%i in (%BUILDDIR%\*) do rmdir /q /s %%i
 	del /q /s %BUILDDIR%\*
+	del vis_tools*.rst modules.rst >nul 2>&1
 	goto end
 )
 
@@ -78,9 +79,9 @@ if errorlevel 9009 (
 if "%1" == "generate-api" (
 	set SPHINX_APIDOC_OPTIONS=members,undoc-members,show-inheritance,ignore-module-all
 	del modules.rst >nul 2>&1
-	del vis_tools.rst >nul 2>&1
+	del vis_tools_index.rst >nul 2>&1
     sphinx-apidoc -f -e -o . ../vis_tools
-    REN modules.rst vis_tools.rst
+    REN modules.rst vis_tools_index.rst
 	goto end
 )
 

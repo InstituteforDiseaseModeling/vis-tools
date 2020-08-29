@@ -4,3 +4,6 @@
 
 # Python
 *.pyc
+
+# sphinx build folder
+docs/_build

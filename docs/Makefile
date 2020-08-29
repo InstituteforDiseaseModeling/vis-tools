@@ -47,15 +47,14 @@ help:
 .PHONY: clean
 clean:
 	rm -rf $(BUILDDIR)/*
-	rm -rf vis_tools*.rst
+	rm -rf vis_tools*.rst modules.rst
 
 .PHONY: generate-api
 
 generate-api:
-	-rm modules.rst
-	-rm vis_tools.rst
-	SPHINX_APIDOC_OPTIONS=members,undoc-members,show-inheritance,ignore-module-all sphinx-apidoc -f -e -o . ../vis_tools
-	mv modules.rst vis_tools.rst
+	-rm modules.rst vis_tools_index.rst
+	sphinx-apidoc -f -e -o . ../vis_tools
+	mv modules.rst vis_tools_index.rst
 
 
 .PHONY: html
