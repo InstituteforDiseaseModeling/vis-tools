@@ -1111,22 +1111,22 @@ class VisSet(object):
 
         Args:
             vis_section (str): The visualization section of the visset.json
-            file. For the Geospatial client, valid values for vis_section
-            are "nodeVis" or "heatmapVis". Other clients will have other
-            visualization sections. See defaultvisset.json.
+                file. For the Geospatial client, valid values for vis_section
+                are "nodeVis" or "heatmapVis". Other clients will have other
+                visualization sections. See defaultvisset.json.
 
             sink_name (str): The name of the sink to which to bind. E.g.
-            "shapeExtrusion".
+                "shapeExtrusion".
 
             source_name (str): The name of the data source to which to bind.
-            E.g. "SpatialReport_Prevalence" or "BirthRate". Can be None.
+                E.g. "SpatialReport_Prevalence" or "BirthRate". Can be None.
 
             func (str): The function to use on the binding or None. The details
-            of function syntax are documented elsewhere, but in general this
-            may be "none()", some built-in function e.g. "scale(3, 20)", or
-            a custom Javascript function body, e.g.::
+                of function syntax are documented elsewhere, but in general this
+                may be "none()", some built-in function e.g. "scale(3, 20)", or
+                a custom Javascript function body, e.g.::
 
-                "{ return 1.0 - binding.value; }"
+                    "{ return 1.0 - binding.value; }"
 
         """
         sink = None
@@ -1296,10 +1296,10 @@ class VisSet(object):
 
         Args:
             spatial_channel_names (list): a list or array of spatial channel
-            names. If only one channel is to be excluded, enclose it in
-            parens or [] so that it is iterable. E.g.::
+                names. If only one channel is to be excluded, enclose it in
+                parens or [] so that it is iterable. E.g.::
 
-                exclude_spatial_channels(["SpatialReport_Adult_Vectors"])
+                    exclude_spatial_channels(["SpatialReport_Adult_Vectors"])
 
         """
         for channel_name in spatial_channel_names:
@@ -1328,10 +1328,10 @@ class VisSet(object):
 
         Args:
             spatial_channel_names (list): a list or array of spatial channel
-            names. If only one channel is to be excluded, enclose it in
-            parens or [] so that it is iterable  e. E.g.::
+                names. If only one channel is to be excluded, enclose it in
+                parens or [] so that it is iterable  e. E.g.::
 
-                include_spatial_channels(["SpatialReport_Adult_Vectors"])
+                    include_spatial_channels(["SpatialReport_Adult_Vectors"])
 
         """
         for channel_name in self.links["spatial"]:
@@ -1372,12 +1372,12 @@ class VisSet(object):
 
         Args:
             node_id_array (list): a list or array of node id's to be excluded.
-            If only a single node is to be excluded, enclose it in parens or
-            [] so that it is iterable, e.g.::
+                If only a single node is to be excluded, enclose it in parens or
+                [] so that it is iterable, e.g.::
 
-                exclude_nodes_from_stats([10001])
+                    exclude_nodes_from_stats([10001])
 
-            or just call exclude_node_from_stats()
+                or just call exclude_node_from_stats()
 
         """
         self._excluded_nodes.update(node_id_array)

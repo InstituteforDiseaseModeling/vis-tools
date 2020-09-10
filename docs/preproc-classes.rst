@@ -10,4 +10,4 @@ generated for you by :term:`survey`.
 .. toctree::
     :maxdepth: 3
 
-    vis_tools
+    vis_tools_index

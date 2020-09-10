@@ -315,11 +315,11 @@ class SpatialBinary(object):
             channel_name (str): Channel name to assign to the result binary.
 
             combine_func (function): A function that combines the values from
-            the two spatial binary inputs, one at a time. The signature of
-            the combine_func is::
+                the two spatial binary inputs, one at a time. The signature of
+                the combine_func is::
 
-                combine_func(value1, value2)
-                    return value1 + value2      # for example
+                    combine_func(value1, value2)
+                        return value1 + value2      # for example
 
         Raises:
             ValueError: if SpatialBinary ofbjects don't have same dimensions or
