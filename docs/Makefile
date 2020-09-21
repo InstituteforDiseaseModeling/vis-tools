@@ -53,7 +53,7 @@ clean:
 
 generate-api:
 	-rm vis_tools.rst
-	sphinx-apidoc -f -e -o . ../vis_tools
+	sphinx-apidoc -f -e -M -o . ../vis_tools
 
 
 .PHONY: html

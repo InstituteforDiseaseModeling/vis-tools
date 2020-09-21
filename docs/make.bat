@@ -78,7 +78,7 @@ if errorlevel 9009 (
 if "%1" == "generate-api" (
 	set SPHINX_APIDOC_OPTIONS=members,undoc-members,show-inheritance,ignore-module-all
 	del vis_tools.rst >nul 2>&1
-    sphinx-apidoc -f -e -o . ../vis_tools
+    sphinx-apidoc -f -e -M -o . ../vis_tools
 	goto end
 )
 
