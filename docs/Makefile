@@ -53,9 +53,8 @@ clean:
 
 generate-api:
 	-rm modules.rst vis_tools_index.rst
-	sphinx-apidoc -f -e -o . ../vis_tools
+	sphinx-apidoc -f -e -M -o . ../vis_tools
 	mv modules.rst vis_tools_index.rst
-
 
 .PHONY: html
 html: 

@@ -80,7 +80,7 @@ if "%1" == "generate-api" (
 	set SPHINX_APIDOC_OPTIONS=members,undoc-members,show-inheritance,ignore-module-all
 	del modules.rst >nul 2>&1
 	del vis_tools_index.rst >nul 2>&1
-    sphinx-apidoc -f -e -o . ../vis_tools
+    sphinx-apidoc -f -e -M -o . ../vis_tools
     REN modules.rst vis_tools_index.rst
 	goto end
 )
