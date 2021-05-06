@@ -33,7 +33,7 @@
     "file-saver": "2.0.1",
     "font-awesome": "^4.7.0",
     "heatmapjs": "2.0.2",
-    "highcharts": "7.1.1",
+    "highcharts": "9.0.0",
     "jquery": "3.4.1",
     "jquery-ui-dist": "1.12.1",
     "lodash": "4.17.11",
