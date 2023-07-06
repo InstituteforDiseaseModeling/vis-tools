@@ -726,29 +726,29 @@ class VisSet(object):
 
         Args:
             event_name (str): The name of the event for which a marker layer is
-            desired. It must exactly match the event name in the event
-            recorder. E.g. "Received_Treatment".
+                desired. It must exactly match the event name in the event
+                recorder. E.g. "Received_Treatment".
 
             marker (str): The name of the marker image to use. "Triangle" or
-            "Cross" are allowable (see constants at top of class).
+                "Cross" are allowable (see constants at top of class).
 
             color (str): An HTML/CSS or SVG named color for the marker. E.g.
-            "red" or "#ccff00"
+                "red" or "#ccff00"
 
             placement (str): The location, with respect to the node lat/log
-            center, for the marker. "Top", "Left", "Bottom", or "Right" are
-            allowable (see constants at top of class).
+                center, for the marker. "Top", "Left", "Bottom", or "Right" are
+                allowable (see constants at top of class).
 
             duration (int): The duration, in timesteps for which the marker will
-            remain visible after the event occurs. E.g. 2 will cause the
-            marker to appear above the node on the timestep of the event,
-            and remain there for two timesteps before disappearing.
+                remain visible after the event occurs. E.g. 2 will cause the
+                marker to appear above the node on the timestep of the event,
+                and remain there for two timesteps before disappearing.
 
             show (bool): Whether this layer will be visible by default when the
-            Geospatial client loads this visset. If show is False, the layer
-            CZML is still generated and loaded by the client, but the layer
-            will have its checkbox unchecked (and therefore not be visible)
-            in the client when the page is first loaded.
+                Geospatial client loads this visset. If show is False, the layer
+                CZML is still generated and loaded by the client, but the layer
+                will have its checkbox unchecked (and therefore not be visible)
+                in the client when the page is first loaded.
 
         """
         # Make sure everything we need is available

@@ -7,3 +7,5 @@
 
 # sphinx build folder
 docs/_build
+docs/vis_tools*.rst
+vis_tools.egg-info/
