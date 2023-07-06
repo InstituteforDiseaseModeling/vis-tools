@@ -3,3 +3,5 @@ sphinxcontrib-napoleon~=0.7
 sphinx~=6.2.1
 plantweb~=1.2.1
 numpydoc~=1.5.0
+myst-parser~=2.0.0
+readthedocs-sphinx-search~=0.3.1
