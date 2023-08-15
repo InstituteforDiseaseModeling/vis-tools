@@ -1,7 +1,7 @@
 # import sys
 from setuptools import setup, find_packages
 
-requires = ['czml>=0.3.3']
+requires = ['czml=0.3.3']
 
 long_description = "The Institute for Disease Modeling (IDM) develops complex "\
     "software for disease modeling. The primary software, Epidemiological "\

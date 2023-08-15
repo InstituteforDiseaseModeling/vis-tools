@@ -7,3 +7,4 @@
 
 # sphinx build folder
 docs/_build
+venv_bash/
