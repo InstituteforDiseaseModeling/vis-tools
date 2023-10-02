@@ -8,3 +8,5 @@
 # sphinx build folder
 docs/_build
 venv_bash/
+docs/modules.rst
+docs/vis_tools*.rst

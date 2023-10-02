@@ -42,7 +42,9 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
-    'plantweb.directive'
+    'plantweb.directive',
+    'sphinx_search.extension', # search across multiple docsets in domain
+
 ]
 
 plantuml = 'plantweb'
@@ -271,6 +273,20 @@ html_use_opensearch = ''
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Vis-Tools'
 
+# -- RTD Sphinx search for searching across the entire domain, default parent -------------
+
+if os.environ.get('READTHEDOCS') == 'True':
+
+    search_project_parent = "institute-for-disease-modeling-idm"
+    search_project = os.environ["READTHEDOCS_PROJECT"]
+    search_version = os.environ["READTHEDOCS_VERSION"]
+
+    rtd_sphinx_search_default_filter = f"subprojects:{search_project_parent}/{search_version}"
+
+    rtd_sphinx_search_filters = {
+        "Search this project": f"project:{search_project}/{search_version}",
+        "Search all IDM docs": f"subprojects:{search_project_parent}/{search_version}",
+    }
 
 
 # -- Options for LaTeX output ---------------------------------------------
