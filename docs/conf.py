@@ -42,7 +42,9 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
-    'plantweb.directive'
+    'plantweb.directive',
+    'myst_parser', # source files can be written in Markdown or RST
+    'sphinx_search.extension' # search across all IDM docs
 ]
 
 plantuml = 'plantweb'
@@ -52,7 +54,7 @@ autodoc_default_options = {
     'members': None
 }
 
-autodoc_mock_imports = []
+autodoc_mock_imports = ['pygeoif.geometry']
 
 
 napoleon_google_docstring = True
@@ -63,8 +65,7 @@ templates_path = ['_templates']
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 #
-# source_suffix = ['.rst', '.md']
-source_suffix = '.rst'
+source_suffix = ['.rst', '.md']
 
 # The encoding of source files.
 #
@@ -92,7 +93,7 @@ version = u'1.4'
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = None
+language = 'en'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -244,8 +245,23 @@ html_show_sphinx = False
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
-#
-html_use_opensearch = ''
+
+# -- RTD Sphinx search for searching across the entire domain -------------
+
+if os.environ.get('READTHEDOCS') == 'True':
+
+    search_project_parent = "institute-for-disease-modeling-idm"
+    search_project = os.environ["READTHEDOCS_PROJECT"]
+    search_version = os.environ["READTHEDOCS_VERSION"]
+
+    rtd_sphinx_search_default_filter = f"subprojects:{search_project_parent}/{search_version}"
+
+    rtd_sphinx_search_filters = {
+        "Search this project": f"project:{search_project}/{search_version}",
+        "Search all IDM docs": f"subprojects:{search_project_parent}/{search_version}",
+    }
+
+#html_use_opensearch = ''
 
 # This is the file name suffix for HTML files (e.g. ".xhtml").
 # html_file_suffix = None
