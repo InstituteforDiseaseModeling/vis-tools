@@ -43,8 +43,26 @@ extensions = [
     'sphinx.ext.napoleon',
     'sphinx.ext.todo',
     'plantweb.directive',
-    'myst_parser', # source files can be written in Markdown or RST
-    'sphinx_search.extension' # search across all IDM docs
+    'sphinx_search.extension', # search across multiple docsets in domain
+    'sphinx.ext.viewcode', # link to view source code
+    'myst_parser', # source files written in MD or RST
+]
+
+myst_enable_extensions = [
+    "amsmath",
+    "attrs_inline",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "fieldlist",
+    "html_admonition",
+    "html_image",
+    "linkify",
+    "replacements",
+    "smartquotes",
+    "strikethrough",
+    "substitution",
+    "tasklist"
 ]
 
 plantuml = 'plantweb'
@@ -185,13 +203,13 @@ html_favicon = "images/favicon.ico"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
+
 html_static_path = ['_static']
 
-html_context = {
-    'css_files': [
-        '_static/theme_overrides.css'
-        ]
-}
+html_css_files = ['theme_overrides.css']
+
+html_js_files = ['show_block_by_os.js'] 
+
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
 # directly to the root of the documentation.
@@ -287,6 +305,20 @@ if os.environ.get('READTHEDOCS') == 'True':
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Vis-Tools'
 
+# -- RTD Sphinx search for searching across the entire domain, default parent -------------
+
+if os.environ.get('READTHEDOCS') == 'True':
+
+    search_project_parent = "institute-for-disease-modeling-idm"
+    search_project = os.environ["READTHEDOCS_PROJECT"]
+    search_version = os.environ["READTHEDOCS_VERSION"]
+
+    rtd_sphinx_search_default_filter = f"subprojects:{search_project_parent}/{search_version}"
+
+    rtd_sphinx_search_filters = {
+        "Search this project": f"project:{search_project}/{search_version}",
+        "Search all IDM docs": f"subprojects:{search_project_parent}/{search_version}",
+    }
 
 
 # -- Options for LaTeX output ---------------------------------------------
