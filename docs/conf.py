@@ -46,6 +46,7 @@ extensions = [
     'sphinx_search.extension', # search across multiple docsets in domain
     'sphinx.ext.viewcode', # link to view source code
     'myst_parser', # source files written in MD or RST
+    'sphinxcontrib.jquery',
 ]
 
 myst_enable_extensions = [
