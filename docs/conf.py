@@ -273,7 +273,7 @@ if os.environ.get('READTHEDOCS') == 'True':
     search_project = os.environ["READTHEDOCS_PROJECT"]
     search_version = os.environ["READTHEDOCS_VERSION"]
 
-    rtd_sphinx_search_default_filter = f"subprojects:{search_project_parent}/{search_version}"
+    rtd_sphinx_search_default_filter = f"subprojects:{search_project}/{search_version}"
 
     rtd_sphinx_search_filters = {
         "Search this project": f"project:{search_project}/{search_version}",
