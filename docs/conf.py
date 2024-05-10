@@ -19,7 +19,7 @@
 import os
 import subprocess
 import sys
-import sphinx_rtd_theme
+#import sphinx_rtd_theme
 from datetime import datetime
 
 if sys.platform in ["linux", "darwin"]:
@@ -169,17 +169,48 @@ rst_epilog = "\n.. include:: /variables.txt"
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'pydata_sphinx_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
 # #
-# html_theme_options = {
-# }
+html_theme_options = {
+    "collapse_navigation": False,
+    "navigation_depth": 3,
+    "show_prev_next": True,
+    "icon_links": [
+        {"name": "IDM docs", "url": "https://docs.idmod.org", "icon": "fas fa-home"},
+        {
+            "name": "GitHub",
+            "url": "https://github.com/institutefordiseasemodeling/vis-tools",
+            "icon": "fab fa-github-square",
+        },
+    ],
+    "navbar_end": ["theme-switcher", "navbar-icon-links"],
+    "secondary_sidebar_items": ["navbar-side"],
+    "header_links_before_dropdown": 5,
+    "footer_start": ["copyright", "footer_start"],
+    "footer_end": ["theme-version", "footer_end"],
+}
+html_sidebars = {
+    "**": ["sidebar-nav-bs", "page-toc"],
+}
+html_logo = "images/idm-logo-transparent.png"
+html_favicon = "images/favicon.ico"
+html_static_path = ['_static']
+html_baseurl = "https://docs.idmod.org/projects/vis-tools/en/latest"
+html_context = {
+    'rtd_url': 'https://docs.idmod.org/projects/vis-tools/en/latest',
+    "versions_dropdown": {
+        "latest": "devel (latest)",
+        "stable": "current (stable)",
+    },
+    "default_mode": "light",
+}
 
 # Add any paths that contain custom themes here, relative to this directory.
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
+#html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # The name for this set of Sphinx documents.
 # "<project> v<release> documentation" by default.
@@ -193,7 +224,7 @@ html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
 #
-html_logo = "images/IDM_white.png"
+#html_logo = "images/IDM_white.png"
 
 # The name of an image file (relative to this directory) to use as a favicon of
 # the docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
@@ -209,7 +240,7 @@ html_static_path = ['_static']
 
 html_css_files = ['theme_overrides.css']
 
-html_js_files = ['show_block_by_os.js'] 
+#html_js_files = ['show_block_by_os.js']
 
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
