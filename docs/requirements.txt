@@ -1,4 +1,4 @@
-sphinx-rtd-theme~=1.2.2
+pydata-sphinx-theme
 sphinxcontrib-napoleon~=0.7
 sphinx~=6.2.1
 plantweb~=1.2.1
