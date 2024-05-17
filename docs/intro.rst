@@ -1,6 +1,6 @@
-============
-Quick starts
-============
+==========
+Quickstart
+==========
 
 This section provides two quick introductions to |VT|, one running |VT| from
 within the |COMPS_s| system, the other running standalone and doing a
