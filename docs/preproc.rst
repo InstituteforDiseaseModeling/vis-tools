@@ -1,6 +1,6 @@
-=============================
-Preprocessing simulation data
-=============================
+===================
+Preprocess sim data
+===================
 
 Before |VT| can provide a visualization for a simulation's data, a preprocessing
 step is required. The purpose of this preprocessing step is:

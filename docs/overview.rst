@@ -1,6 +1,6 @@
-=============
-|VT| overview
-=============
+========
+Overview
+========
 
 Welcome to the |IDM_s| |VT| visualization tool set. This page will provide an
 overview of the structure of |VT| and the inter-operation of its parts. The

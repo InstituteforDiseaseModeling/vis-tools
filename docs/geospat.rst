@@ -1,6 +1,6 @@
-========================
-Geospatial visualization
-========================
+==========
+Geospatial
+==========
 
 This section describes in detail the |VT| Geospatial visualization client. It
 allows you to visualize simulation inputs and outputs on a 3D globe of earth.
