@@ -6,8 +6,11 @@ visualization of geospatial disease simulation data. It is meant to be used as
 an adjunct to [EMOD](http://idmod.org/software), IDM's epidemiological modeling
 software.
 
-For complete information on the installation and use of Vis-Tools, see the
-[documentation](https://docs.idmod.org/projects/vis-tools/en/latest/).
+PROJECT STATUS
+--------------
+**Unless otherwise noted, these projects are no longer actively maintained or supported by IDM or the Gates Foundation.** 
+
+For your convenience, the last build of the documentation is available here: [docs-idmod-org-vis-tools-en-latest.zip](https://github.com/user-attachments/files/28483503/docs-idmod-org-vis-tools-en-latest.zip)
 
 REQUIREMENTS
 ------------
@@ -50,10 +53,6 @@ INSTALLATION
     cd vistools
     npm install
     ```
-    
-For full details, read the [Prerequisites](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/prereqs.html)
-page and [Quick start](https://institutefordiseasemodeling.github.io/Documentation/vis-tools/intro.html)
-pages.
 
 V1.4
 ----
